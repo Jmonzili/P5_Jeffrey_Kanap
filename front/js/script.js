@@ -1,25 +1,25 @@
-let produitsData = [];
+let modelesData = [];
 
-const fetchProduit = async () => {
+const fetchModeles = async () => {
     await fetch("http://localhost:3000/api/products")
     .then((res) => res.json())
     .then((promise) => {
-        produitsData = promise;
-        console.log(produitsData);
+        modelesData = promise;
+        console.log(modelesData);
     });
 };
 
-async function produitDisplay() {
-    await fetchProduit();
+async function modelesDisplay() {
+    await fetchModeles();
 
     document
-        .getElementById("items").innerHTML = produitsData.map(
-            (produit) =>
-            `<a href="./product.html?id='${produit._id}'">
+        .getElementById("items").innerHTML = modelesData.map(
+            (modele) =>
+            `<a href="./product.html?id='${modele._id}'">
             <article>
-            <img src="${produit.imageUrl}" alt="${produit.altTxt}">
-            <h3 class="productName">${produit.name}</h3>
-            <p class="productDescription">${produit.description}</p>
+            <img src="${modele.imageUrl}" alt="${modele.altTxt}">
+            <h3 class="productName">${modele.name}</h3>
+            <p class="productDescription">${modele.description}</p>
             </article>
             </a>`
             )
@@ -28,4 +28,4 @@ async function produitDisplay() {
             
 }
 
-produitDisplay();
+modelesDisplay();
