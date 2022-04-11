@@ -1,5 +1,7 @@
+// **** Création de tableau des différent modeles ****
 let modelesData = [];
-
+ 
+// *** Envoi des données du catalogue vers le tableau via L'API ***
 const fetchModeles = async () => {
     await fetch("http://localhost:3000/api/products")
     .then((res) => res.json())
@@ -9,6 +11,7 @@ const fetchModeles = async () => {
     });
 };
 
+// ***** Création des éléments HTML dans L'Id "#items" *****
 async function modelesDisplay() {
     await fetchModeles();
 
@@ -23,20 +26,9 @@ async function modelesDisplay() {
     </article>
     </a>`,
     )
-    .join('');
-/*
-    let idLinks = 
-    document.querySelectorAll(".link-modele");
-    console.log(idLinks);
 
-    idLinks.forEach((link) =>
-    link.addEventListener("click", () => {
-        console.log(link);
-        
-        window.location.search = `./product.html?id${modele._id}`;
-    }),
-    );   
-*/
+    // **.join('') pour la suppression des virgules ***
+    .join(''); 
 };
 
 modelesDisplay();
