@@ -19,7 +19,6 @@ const productsDisplay = async () => {
     await fetchProduct();
 
     let itemImg = document.getElementsByClassName("item__img");
-    console.log(itemImg); 
     
 // ***** Tableau donc pas oublié l'index  *****
     itemImg[0].innerHTML = `
@@ -37,8 +36,6 @@ const productsDisplay = async () => {
     let colorSelect = document.getElementById("colors");
     console.log(colorSelect);
 
-    console.log(productData.colors);
-
 // ***** création d'élément 'option' pour chaque couleur  *****
     productData.colors.forEach((color) => {
         let tagColor = document.createElement("option");
@@ -47,48 +44,67 @@ const productsDisplay = async () => {
         tagColor.value = `${color}`;
 
         colorSelect.appendChild(tagColor);
-        console.log(tagColor);
     });
     addPanier(productData);
 };
 
 productsDisplay();
 
+let addColor = document.querySelector("#colors");
+
+let addQuantity = document.querySelector("#quantity");
+
+//---------------selectionner le bouton d'ajout---------------
 const addPanier = () => {
     let bouton = document.querySelector("button");
-    console.log(bouton);
-    bouton.addEventListener("click", function() {
-        let addColor = document.querySelector("#colors");
-        console.log(addColor.value);
-
-        let addQuantity = document.querySelector("#quantity");
-        console.log(addQuantity.value);
-
-        let addProduct = JSON.parse(localStorage.getItem("produit"));
-
-        const combiColorQuantity = Object.assign({}, productData, {
-            couleur: `${addColor.value}`,
-            quantité: `${addQuantity.value}`
-        });
-
-        console.log(combiColorQuantity);
-
-        if(addProduct == null) {
-            addProduct = [];
-            addProduct.push(productData);
-            localStorage.setItem("produit", JSON.stringify(cardProduct));
-        };
-        console.log(addProduct);
-        /*
-        let addId = product;
-        console.log(addId);
-
-        let addName = productData.name;
-        console.log(addName);
-
-        let addPrice = productData.price;
-        console.log(addPrice);
-        */
+//----------------Ecouté le click du bouton--------------------
+    bouton.addEventListener("click", (e) => {
+        e.preventDefault();
         
+        let choixUser = {
+            id: `${productData._id}`,
+            nom: `${productData.name}`,
+            prix: `${productData.price}€`,
+            couleur: `${addColor.value}`,
+            quantité: `${addQuantity.value}`   
+        };
+        
+        const infoProductSelect = Object.assign({}, choixUser);
+
+        console.log(infoProductSelect);
+
+//------------------Local Storage---------------------
+//-----------------Stockage des valeurs---------------
+
+//----Création de variable "selectionLocalStorage"-----
+        let selectionLocalStorage = JSON.parse(localStorage.getItem("produit"));
+//Conversion des objets JavaScript du local storage en JSON via "JSON.parse"
+        console.log(selectionLocalStorage);
+//fenetre pour continué les achats ou pour ce rendre au panier
+        const fenetreConfirmation = () => {
+            if(window.confirm(`L'article ${productData.name} , ${addColor.value} a été ajouter au panier.
+            Consultez le panier OK ou continuez vos achats ANNULER`)){
+                window.location.href = "cart.html";
+            }else{
+                window.location.href = "index.html";
+            }
+        }
+//----------Fonction d'ajout dans le localStorage
+    const sendLocalStorage = () => {
+        selectionLocalStorage.push(infoProductSelect);
+        localStorage.setItem("produit", JSON.stringify(selectionLocalStorage));
+    };
+
+//-----------Condition d'ajout dans le local storage-------------
+        if(selectionLocalStorage){
+            sendLocalStorage();
+            fenetreConfirmation();
+            }
+        else{
+            selectionLocalStorage = [];
+            sendLocalStorage();
+            fenetreConfirmation();
+            
+        }
     });
 };
