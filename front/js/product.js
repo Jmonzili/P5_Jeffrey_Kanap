@@ -62,16 +62,23 @@ const addPanier = () => {
         e.preventDefault();
         
         let choixUser = {
-            id: `${productData._id}`,
-            nom: `${productData.name}`,
-            prix: `${productData.price}€`,
-            couleur: `${addColor.value}`,
-            quantité: `${addQuantity.value}`   
+            
+            id_Select: `${productData._id}`,
+            nom_Select: `${productData.name}`,
+            photo_Select: `${productData.imageUrl}`,
+            photo_Description: `${productData.altTxt}`,
+            prix: `${productData.price}`,
+            description_Select: `${productData.description}`,
+            /**/
+            couleur_Select: `${addColor.value}`,
+            quantité_Select: `${addQuantity.value}`
         };
         
         const infoProductSelect = Object.assign({}, choixUser);
 
         console.log(infoProductSelect);
+
+//--------Condition couleur et quantité--------
 
 //------------------Local Storage---------------------
 //-----------------Stockage des valeurs---------------
@@ -79,32 +86,46 @@ const addPanier = () => {
 //----Création de variable "selectionLocalStorage"-----
         let selectionLocalStorage = JSON.parse(localStorage.getItem("produit"));
 //Conversion des objets JavaScript du local storage en JSON via "JSON.parse"
-        console.log(selectionLocalStorage);
+
 //fenetre pour continué les achats ou pour ce rendre au panier
         const fenetreConfirmation = () => {
-            if(window.confirm(`L'article ${productData.name} , ${addColor.value} a été ajouter au panier.
+            if(window.confirm(`L'article ${productData.name}, ${addColor.value} a été ajouter au panier.
             Consultez le panier OK ou continuez vos achats ANNULER`)){
                 window.location.href = "cart.html";
-            }else{
-                window.location.href = "index.html";
-            }
+            }/*else{
+                
+            }*/
         }
 //----------Fonction d'ajout dans le localStorage
     const sendLocalStorage = () => {
         selectionLocalStorage.push(infoProductSelect);
+//-------transformation en format JSON en envoi dans le localStorage-------
         localStorage.setItem("produit", JSON.stringify(selectionLocalStorage));
     };
 
 //-----------Condition d'ajout dans le local storage-------------
-        if(selectionLocalStorage){
+        if(selectionLocalStorage) {
             sendLocalStorage();
             fenetreConfirmation();
-            }
-        else{
+        }else {
             selectionLocalStorage = [];
             sendLocalStorage();
             fenetreConfirmation();
             
         }
+/*
+//----------En cas de Ref & de couleur identique-----------------
+for (i = 0; i < selectionLocalStorage.length; i++) {
+    if (selectionLocalStorage[i].id_Select == productData._id &&
+        selectionLocalStorage[i].colorSelect == addColor.value
+    ) {
+        return(
+            selectionLocalStorage[i].quantité_Select + addQuantity.value,
+            localStorage.setItem("produit",JSON.stringify(selectionLocalStorage)),
+            (selectionLocalStorage = JSON.parse(localStorage.getItem("produit")))
+        );
+    }
+}
+*/
     });
 };
