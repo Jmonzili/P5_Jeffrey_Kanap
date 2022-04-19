@@ -116,15 +116,67 @@ const formulaireValues = {
     email : document.querySelector("#email").value
 }
 
-//-------Envois de formulaireValues dans le localStorage--------
-localStorage.setItem("formulaireValues", JSON.stringify(formulaireValues));
-console.log("formulaire")
-console.log(formulaireValues)
+//*******************CONDITION DE VALIDATION DU FORMULAIRE*******************/
+const textAlert = (value) => {
+    return `${value}: Chiffre et symbole ne sont pas autorisé \n Seulement entre 3 et 20 caractères`;
+}
+const regExPrenomNomVille = (value) => {
+    return /^[A-Za-z]{3,20}$/.test(value);
+};
+
+function controlePrenom() {
+    //-----------------Contrôle de la validité du prenom ---------------
+    const prenom = formulaireValues.firstName;
+    if(regExPrenomNomVille(prenom)) {
+     return true;
+    } else {
+     alert (textAlert("Prénom"));
+     return false;
+    }
+};
+
+function controleNom() {
+    //-----------------Contrôle de la validité du nom ---------------
+    const nom = formulaireValues.lastName;
+    if (regExPrenomNomVille(nom)) {
+     console.log("OK");
+     return true;
+    } else {
+     console.log("KO");
+     alert (textAlert("Nom"));
+     return false;
+    }
+};
+
+function controleVille() {
+    //-----------------Contrôle de la validité du nom ---------------
+    const ville = formulaireValues.city;
+    if (regExPrenomNomVille(ville)) {
+     console.log("OK");
+     return true;
+    } else {
+     console.log("KO");
+     alert (textAlert("Ville"));
+     return false;
+    }
+};
+
+if(controlePrenom() && controleNom() &&controleVille()) {
+    //-------Envois de formulaireValues dans le localStorage--------
+    localStorage.setItem("formulaireValues", JSON.stringify(formulaireValues));
+    console.log(controlePrenom());
+}else {
+    console.log(controlePrenom());
+    alert("Veuillez remplire correctement le formulaire !" )
+    
+}
+
+//*******************FIN - CONDITION DE VALIDATION DU FORMULAIRE*******************/
 
 //Stocker les values du formulaire et les produits dans un object a envoyer au serveur
 const aEnvoyer = {
     selectionLocalStorage,
-    formulaireValues
+    formulaireValues,
 }
 console.log("aEnvoyer");
 console.log(aEnvoyer);
