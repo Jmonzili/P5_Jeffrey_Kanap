@@ -15,13 +15,13 @@ const cartEmplacement = document.querySelector("#cart__items");
 
 //--------Condition d'affichage panier----------
 if(selectionLocalStorage === null || selectionLocalStorage == 0) {
-    const panierVide = `
+    
+    cartEmplacement.innerHTML = `
     <article class="cart__item"> 
     <div> Votre panier est vide </div>
     </article>
     `;
-    cartEmplacement.innerHTML = panierVide;
-} else {
+}else {
 cartEmplacement.innerHTML =  selectionLocalStorage
 .map((eltPanier) => `
 <article class="cart__item" data-id="${eltPanier.id_Select}" data-color="${eltPanier.couleur_Select}">
@@ -32,12 +32,12 @@ cartEmplacement.innerHTML =  selectionLocalStorage
         <div class="cart__item__content__description">
             <h2>${eltPanier.nom_Select}</h2>
             <p>${eltPanier.couleur_Select}</p>
-            <p>${eltPanier.prix * eltPanier.quantité_Select}€</p>
+            <p>${eltPanier.prix * eltPanier.quantite_Select}€</p>
         </div>
         <div class="cart__item__content__settings">
             <div class="cart__item__content__settings__quantity">
                 <p>Qté :  </p>
-                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${eltPanier.quantité_Select}">
+                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${eltPanier.quantite_Select}">
             </div>
             
             <div class="cart__item__content__settings__delete">
@@ -77,19 +77,29 @@ for (let f = 0; f < btnDelete.length; f++){
 let calculMontant = [];
 
 //-------------------Récuperation des montant--------------
-/*
+if(selectionLocalStorage){
 for (let g = 0; g < selectionLocalStorage.length; g++) {
     let prixProduitDuPanier = selectionLocalStorage[g].prix;
 //----Envoie des prix dans "calculMontant"
     calculMontant.push(prixProduitDuPanier);
     console.log(calculMontant);
-};
+}};
+/*
 */
 //--------Addition des montant par la methode reduce----------
+const initialValue = 0; 
 
+const montantTotal = calculMontant.reduce(
+    (previousValue, currentValue) => previousValue + currentValue,
+    initialValue
+  );
+  console.log("Joky");
+  console.log(montantTotal);
 
 //---Affichage du montant total------
-
+const prixTotal = document.querySelector("#totalPrice");
+prixTotal.innerHTML = `${montantTotal}`;
+console.log(prixTotal);
 //************************ Formulaire de commande ************/
 //-------Sélection du bouton d'envoi du formulaire--------
 const btnCommander = document.querySelector("#order");
@@ -98,32 +108,45 @@ console.log(btnCommander);
 //----------------Ecoute du bouton commander---------------
 btnCommander.addEventListener("click", (e) => {
 e.preventDefault();
-
-// Récuperation des données du formulaire dans le localStorage
-
-localStorage.setItem("firstName", document.querySelector("#firstName").value);
-localStorage.setItem("lastName", document.querySelector("#lastName").value);
-localStorage.setItem("address", document.querySelector("#address").value);
-localStorage.setItem("city", document.querySelector("#city").value);
-localStorage.setItem("email", document.querySelector("#email").value);
-
-//-------------Creation de l'objet formulaire--------------
-const formulaire = {
-    prenom: localStorage.getItem("firstName"),
-    nom: localStorage.getItem("lastName"),
-    adresse: localStorage.getItem("address"),
-    ville: localStorage.getItem("city"),
-    email: localStorage.getItem("email")
+const formulaireValues = {
+    firstName : document.querySelector("#firstName").value,
+    lastName : document.querySelector("#lastName").value,
+    address : document.querySelector("#address").value,
+    city : document.querySelector("#city").value,
+    email : document.querySelector("#email").value
 }
+
+//-------Envois de formulaireValues dans le localStorage--------
+localStorage.setItem("formulaireValues", JSON.stringify(formulaireValues));
 console.log("formulaire")
-console.log(formulaire)
+console.log(formulaireValues)
+
 //Stocker les values du formulaire et les produits dans un object a envoyer au serveur
 const aEnvoyer = {
     selectionLocalStorage,
-    formulaire
+    formulaireValues
 }
+console.log("aEnvoyer");
 console.log(aEnvoyer);
 
 //---------------------Envoi vers le serveur-------------------
-
 });
+
+/*Conservé les values de formulaireValues dans les champs du formulaire */
+//------------Envois de la key du localStorage vers une constante-------------
+const dataLocalStorage = localStorage.getItem("formulaireValues");
+if(dataLocalStorage) {
+//--------------------Conversion en objet Javascript-------------------
+const dataLocalStorageObjet = JSON.parse(dataLocalStorage);
+
+//----Fonction de remplissange du formulaire par données du localStorage------
+function saveFormulaire(input) {
+    document.querySelector(`#${input}`).value = dataLocalStorageObjet[input];
+};
+
+saveFormulaire("firstName");
+saveFormulaire("lastName");
+saveFormulaire("address");
+saveFormulaire("city");
+saveFormulaire("email");
+};

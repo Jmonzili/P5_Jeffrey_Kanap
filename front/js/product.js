@@ -67,14 +67,14 @@ const addPanier = () => {
             nom_Select: `${productData.name}`,
             photo_Select: `${productData.imageUrl}`,
             photo_Description: `${productData.altTxt}`,
-            prix: `${productData.price}`,
+            prix: productData.price * addQuantity.value,
             description_Select: `${productData.description}`,
             /**/
             couleur_Select: `${addColor.value}`,
-            quantité_Select: `${addQuantity.value}`
+            quantite_Select: addQuantity.value
         };
         
-        const infoProductSelect = Object.assign({}, choixUser);
+        const infoProductSelect = Object.assign({}, choixUser,);
 
         console.log(infoProductSelect);
 
@@ -92,9 +92,9 @@ const addPanier = () => {
             if(window.confirm(`L'article ${productData.name}, ${addColor.value} a été ajouter au panier.
             Consultez le panier OK ou continuez vos achats ANNULER`)){
                 window.location.href = "cart.html";
-            }/*else{
-                
-            }*/
+            }else{
+                window.location.href = "index.html";
+            }
         }
 //----------Fonction d'ajout dans le localStorage
     const sendLocalStorage = () => {
@@ -105,27 +105,35 @@ const addPanier = () => {
 
 //-----------Condition d'ajout dans le local storage-------------
         if(selectionLocalStorage) {
-            sendLocalStorage();
+            //sendLocalStorage();
             fenetreConfirmation();
+//------Augmenter la quantité si le produit ajouter a le ------- ------------------meme id et la meme couleur------------------
+            for (i = 0; i < selectionLocalStorage.length; i++) {
+                if (selectionLocalStorage[i].id_Select == productData._id &&
+                    selectionLocalStorage[i].couleur_Select == addColor.value
+                ) {
+                    return(
+                        selectionLocalStorage[i].quantite_Select ++ ,
+                        localStorage.setItem("produit",JSON.stringify(selectionLocalStorage)),
+                        (selectionLocalStorage = JSON.parse(localStorage.getItem("produit")))
+                    );
+                }
+            }
+            for (i = 0; i < selectionLocalStorage.length; i++) {
+                if (
+                    (selectionLocalStorage[i].id_Select ==  productData._id &&
+                    selectionLocalStorage[i].couleur_Select != addColor.value) || 
+                    selectionLocalStorage[i].id_Select != productData._id
+                ) { return(
+                    sendLocalStorage()
+                    );
+                }
+            }
         }else {
             selectionLocalStorage = [];
             sendLocalStorage();
-            fenetreConfirmation();
-            
+            fenetreConfirmation(); 
         }
-/*
-//----------En cas de Ref & de couleur identique-----------------
-for (i = 0; i < selectionLocalStorage.length; i++) {
-    if (selectionLocalStorage[i].id_Select == productData._id &&
-        selectionLocalStorage[i].colorSelect == addColor.value
-    ) {
-        return(
-            selectionLocalStorage[i].quantité_Select + addQuantity.value,
-            localStorage.setItem("produit",JSON.stringify(selectionLocalStorage)),
-            (selectionLocalStorage = JSON.parse(localStorage.getItem("produit")))
-        );
-    }
-}
-*/
     });
+    return (selectionLocalStorage = JSON.parse(localStorage.getItem("produit")));
 };
