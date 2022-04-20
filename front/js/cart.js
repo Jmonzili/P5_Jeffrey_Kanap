@@ -32,7 +32,7 @@ cartEmplacement.innerHTML =  selectionLocalStorage
         <div class="cart__item__content__description">
             <h2>${eltPanier.nom_Select}</h2>
             <p>${eltPanier.couleur_Select}</p>
-            <p>${eltPanier.prix * eltPanier.quantite_Select}€</p>
+            <p>${eltPanier.prix}€</p>
         </div>
         <div class="cart__item__content__settings">
             <div class="cart__item__content__settings__quantity">
@@ -41,7 +41,7 @@ cartEmplacement.innerHTML =  selectionLocalStorage
             </div>
             
             <div class="cart__item__content__settings__delete">
-                <button class="deleteItem">Supprimer</button>
+                <p class="deleteItem">Supprimer</p>
             </div>
         </div>
     </div>
@@ -118,50 +118,86 @@ const formulaireValues = {
 
 //*******************CONDITION DE VALIDATION DU FORMULAIRE*******************/
 const textAlert = (value) => {
-    return `${value}: Chiffre et symbole ne sont pas autorisé \n Seulement entre 3 et 20 caractères`;
+    return `Chiffre et symbole ne sont pas autorisé. \n Seulement entre 3 et 20 caractères`;
 }
-const regExPrenomNomVille = (value) => {
+const regExPrenom = (value) => {
+    return /^([A-Za-z]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value);
+};
+
+const regExNomVille = (value) => {
     return /^[A-Za-z]{3,20}$/.test(value);
 };
+
+const regExAdresse = (value) => {
+    return /^[A-Za-z0-9\s]{5,50}$/.test(value);
+}
+
+const regExEmail = (value) => {
+    return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value);
+}
 
 function controlePrenom() {
     //-----------------Contrôle de la validité du prenom ---------------
     const prenom = formulaireValues.firstName;
-    if(regExPrenomNomVille(prenom)) {
-     return true;
+    if(regExPrenom(prenom)) {
+        return true;
     } else {
-     alert (textAlert("Prénom"));
-     return false;
+        document.querySelector("#firstNameErrorMsg").innerHTML = `
+        ${textAlert()}`;
+        return false;
     }
 };
 
 function controleNom() {
     //-----------------Contrôle de la validité du nom ---------------
     const nom = formulaireValues.lastName;
-    if (regExPrenomNomVille(nom)) {
-     console.log("OK");
-     return true;
+    if (regExNomVille(nom)) {
+        return true;
     } else {
-     console.log("KO");
-     alert (textAlert("Nom"));
-     return false;
+        document.querySelector("#lastNameErrorMsg").innerHTML = `
+        ${textAlert()}`;
+        return false;
     }
 };
 
 function controleVille() {
-    //-----------------Contrôle de la validité du nom ---------------
+    //-----------------Contrôle de la validité du champ "ville" ---------------
     const ville = formulaireValues.city;
-    if (regExPrenomNomVille(ville)) {
-     console.log("OK");
-     return true;
+    if (regExNomVille(ville)) {
+        return true;
     } else {
-     console.log("KO");
-     alert (textAlert("Ville"));
-     return false;
+        document.querySelector("#cityErrorMsg").innerHTML = `
+        ${textAlert()}`;
+        return false;
     }
 };
 
-if(controlePrenom() && controleNom() &&controleVille()) {
+function controleAdresse() {
+    //-----------------Contrôle de la validité du champ "Adresse" ---------------
+    const adresse = formulaireValues.address;
+    if (regExAdresse(adresse)) {
+        return true;
+    } else {
+        document.querySelector("#addressErrorMsg").innerHTML = `
+        Ne doit contenir uniquement des lettres sans ponctuation et des chiffres`;
+        return false;
+    }
+};
+
+function controleEmail() {
+    //-----------------Contrôle de la validité du champ "Email" ---------------
+    const emailAddress = formulaireValues.email;
+    if (regExEmail(emailAddress)) {
+        return true;
+    } else {
+        document.querySelector("#emailErrorMsg").innerHTML = `
+        L'email n'est pas valide `;
+        return false;
+    }
+};
+
+//-------------Vérification avant envois dans Local Storage---------------
+if(controlePrenom() && controleNom() && controleVille() && controleAdresse() && controleEmail()) {
     //-------Envois de formulaireValues dans le localStorage--------
     localStorage.setItem("formulaireValues", JSON.stringify(formulaireValues));
     console.log(controlePrenom());
@@ -169,7 +205,7 @@ if(controlePrenom() && controleNom() &&controleVille()) {
     console.log(controlePrenom());
     alert("Veuillez remplire correctement le formulaire !" )
     
-}
+};
 
 //*******************FIN - CONDITION DE VALIDATION DU FORMULAIRE*******************/
 
@@ -177,7 +213,7 @@ if(controlePrenom() && controleNom() &&controleVille()) {
 const aEnvoyer = {
     selectionLocalStorage,
     formulaireValues,
-}
+};
 console.log("aEnvoyer");
 console.log(aEnvoyer);
 

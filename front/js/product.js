@@ -67,7 +67,7 @@ const addPanier = () => {
             nom_Select: `${productData.name}`,
             photo_Select: `${productData.imageUrl}`,
             photo_Description: `${productData.altTxt}`,
-            prix: productData.price * addQuantity.value,
+            prix: (productData.price * addQuantity.value),
             description_Select: `${productData.description}`,
             /**/
             couleur_Select: `${addColor.value}`,
@@ -107,18 +107,22 @@ const addPanier = () => {
         if(selectionLocalStorage) {
             //sendLocalStorage();
             fenetreConfirmation();
-//------Augmenter la quantité si le produit ajouter a le ------- ------------------meme id et la meme couleur------------------
+//------Augmenter la quantité si le produit ajouter a le -------
+//------------------meme id et la meme couleur------------------
             for (i = 0; i < selectionLocalStorage.length; i++) {
                 if (selectionLocalStorage[i].id_Select == productData._id &&
                     selectionLocalStorage[i].couleur_Select == addColor.value
                 ) {
                     return(
-                        selectionLocalStorage[i].quantite_Select ++ ,
+                //Continué de travailler sur le calcul des quantité a l'ajout
+                        (selectionLocalStorage[i].quantite_Select += choixUser.quantite_Select.value),
+                        (selectionLocalStorage[i].prix += choixUser.prix),
                         localStorage.setItem("produit",JSON.stringify(selectionLocalStorage)),
                         (selectionLocalStorage = JSON.parse(localStorage.getItem("produit")))
                     );
                 }
             }
+//-------------------Si couleur ou ID different------------------
             for (i = 0; i < selectionLocalStorage.length; i++) {
                 if (
                     (selectionLocalStorage[i].id_Select ==  productData._id &&
