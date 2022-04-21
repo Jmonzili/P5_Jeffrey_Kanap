@@ -1,5 +1,5 @@
 //Récupération des produits dans le LocalStorage
-let selectionLocalStorage = JSON.parse(localStorage.getItem("produit"));
+let selectionLocalStorage = JSON.parse(localStorage.getItem("products"));
 console.log(selectionLocalStorage);
 /*
 const cartDisplay = async () => {
@@ -57,7 +57,7 @@ for (let f = 0; f < btnDelete.length; f++){
         event.preventDefault();
     console.log(event);
 //--------Selection de l'id du produit a supprimer---------
-    let id_produit_supprimer = selectionLocalStorage[f].id_Select;
+    let id_produit_supprimer = products[f].id_Select;
     console.log(id_produit_supprimer);
 //----------Selectionner l'élément a supprimer methode filter---------------
 //----methode filter inversé grace a "!=="
@@ -65,7 +65,7 @@ for (let f = 0; f < btnDelete.length; f++){
         console.log(selectionLocalStorage);
 //----transfert de la variable dans le localStorage-----
 //-------transformation en format JSON en envoi dans le localStorage-------
-    localStorage.setItem("produit", JSON.stringify(selectionLocalStorage));
+    localStorage.setItem("products", JSON.stringify(selectionLocalStorage));
 //------------Confirmation de suppression------------------
     alert("Le produit a bien été supprimer du panier");
     window.location.href = "panier.html";
@@ -93,7 +93,7 @@ const montantTotal = calculMontant.reduce(
     (previousValue, currentValue) => previousValue + currentValue,
     initialValue
   );
-  console.log("Joky");
+  console.log("montant total");
   console.log(montantTotal);
 
 //---Affichage du montant total------
@@ -108,7 +108,7 @@ console.log(btnCommander);
 //----------------Ecoute du bouton commander---------------
 btnCommander.addEventListener("click", (e) => {
 e.preventDefault();
-const formulaireValues = {
+const contact = {
     firstName : document.querySelector("#firstName").value,
     lastName : document.querySelector("#lastName").value,
     address : document.querySelector("#address").value,
@@ -138,7 +138,7 @@ const regExEmail = (value) => {
 
 function controlePrenom() {
     //-----------------Contrôle de la validité du prenom ---------------
-    const prenom = formulaireValues.firstName;
+    const prenom = contact.firstName;
     if(regExPrenom(prenom)) {
         return true;
     } else {
@@ -150,7 +150,7 @@ function controlePrenom() {
 
 function controleNom() {
     //-----------------Contrôle de la validité du nom ---------------
-    const nom = formulaireValues.lastName;
+    const nom = contact.lastName;
     if (regExNomVille(nom)) {
         return true;
     } else {
@@ -162,7 +162,7 @@ function controleNom() {
 
 function controleVille() {
     //-----------------Contrôle de la validité du champ "ville" ---------------
-    const ville = formulaireValues.city;
+    const ville = contact.city;
     if (regExNomVille(ville)) {
         return true;
     } else {
@@ -174,7 +174,7 @@ function controleVille() {
 
 function controleAdresse() {
     //-----------------Contrôle de la validité du champ "Adresse" ---------------
-    const adresse = formulaireValues.address;
+    const adresse = contact.address;
     if (regExAdresse(adresse)) {
         return true;
     } else {
@@ -186,7 +186,7 @@ function controleAdresse() {
 
 function controleEmail() {
     //-----------------Contrôle de la validité du champ "Email" ---------------
-    const emailAddress = formulaireValues.email;
+    const emailAddress = contact.email;
     if (regExEmail(emailAddress)) {
         return true;
     } else {
@@ -199,7 +199,7 @@ function controleEmail() {
 //-------------Vérification avant envois dans Local Storage---------------
 if(controlePrenom() && controleNom() && controleVille() && controleAdresse() && controleEmail()) {
     //-------Envois de formulaireValues dans le localStorage--------
-    localStorage.setItem("formulaireValues", JSON.stringify(formulaireValues));
+    localStorage.setItem("contact", JSON.stringify(contact));
     console.log(controlePrenom());
 }else {
     console.log(controlePrenom());
@@ -210,14 +210,26 @@ if(controlePrenom() && controleNom() && controleVille() && controleAdresse() && 
 //*******************FIN - CONDITION DE VALIDATION DU FORMULAIRE*******************/
 
 //Stocker les values du formulaire et les produits dans un object a envoyer au serveur
-const aEnvoyer = {
-    selectionLocalStorage,
-    formulaireValues,
+let products = [];
+for (let g = 0; g < selectionLocalStorage.length; g++) {
+    let productsId = selectionLocalStorage[g].id_Select;
+    products.push(productsId);
 };
-console.log("aEnvoyer");
-console.log(aEnvoyer);
+console.log("products");
+console.log(products)
 
 //---------------------Envoi vers le serveur-------------------
+const sendToServer = fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    body: JSON.stringify({contact, products}),
+    headers: {
+        "Accept" : "application",
+        "Content-Type" : "application/json",
+    },
+});
+console.log("sendToServer");
+console.log(sendToServer);
+//Pour voir le résultat du serveur dans la console
 });
 
 /*Conservé les values de formulaireValues dans les champs du formulaire */

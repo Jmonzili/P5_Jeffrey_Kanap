@@ -56,9 +56,9 @@ let addQuantity = document.querySelector("#quantity");
 
 //---------------selectionner le bouton d'ajout---------------
 const addPanier = () => {
-    let bouton = document.querySelector("button");
+    let boutonAjoutPanier = document.querySelector("button");
 //----------------Ecouté le click du bouton--------------------
-    bouton.addEventListener("click", (e) => {
+    boutonAjoutPanier.addEventListener("click", (e) => {
         e.preventDefault();
         
         let choixUser = {
@@ -67,24 +67,21 @@ const addPanier = () => {
             nom_Select: `${productData.name}`,
             photo_Select: `${productData.imageUrl}`,
             photo_Description: `${productData.altTxt}`,
-            prix: (productData.price * addQuantity.value),
+            prix: productData.price * addQuantity.value,
             description_Select: `${productData.description}`,
             /**/
             couleur_Select: `${addColor.value}`,
-            quantite_Select: addQuantity.value
+            quantite_Select: `${addQuantity.value}`
         };
         
         const infoProductSelect = Object.assign({}, choixUser,);
 
         console.log(infoProductSelect);
 
-//--------Condition couleur et quantité--------
-
 //------------------Local Storage---------------------
 //-----------------Stockage des valeurs---------------
-
 //----Création de variable "selectionLocalStorage"-----
-        let selectionLocalStorage = JSON.parse(localStorage.getItem("produit"));
+        let selectionLocalStorage = JSON.parse(localStorage.getItem("products"));
 //Conversion des objets JavaScript du local storage en JSON via "JSON.parse"
 
 //fenetre pour continué les achats ou pour ce rendre au panier
@@ -100,7 +97,7 @@ const addPanier = () => {
     const sendLocalStorage = () => {
         selectionLocalStorage.push(infoProductSelect);
 //-------transformation en format JSON en envoi dans le localStorage-------
-        localStorage.setItem("produit", JSON.stringify(selectionLocalStorage));
+        localStorage.setItem("products", JSON.stringify(selectionLocalStorage));
     };
 
 //-----------Condition d'ajout dans le local storage-------------
@@ -115,10 +112,10 @@ const addPanier = () => {
                 ) {
                     return(
                 //Continué de travailler sur le calcul des quantité a l'ajout
-                        (selectionLocalStorage[i].quantite_Select += choixUser.quantite_Select.value),
-                        (selectionLocalStorage[i].prix += choixUser.prix),
-                        localStorage.setItem("produit",JSON.stringify(selectionLocalStorage)),
-                        (selectionLocalStorage = JSON.parse(localStorage.getItem("produit")))
+                        selectionLocalStorage[i].quantite_Select += choixUser.quantite_Select.value,
+                        selectionLocalStorage[i].prix += choixUser.prix,
+                        localStorage.setItem("products",JSON.stringify(selectionLocalStorage)),
+                        (selectionLocalStorage = JSON.parse(localStorage.getItem("products")))
                     );
                 }
             }
@@ -139,5 +136,5 @@ const addPanier = () => {
             fenetreConfirmation(); 
         }
     });
-    return (selectionLocalStorage = JSON.parse(localStorage.getItem("produit")));
+    return (selectionLocalStorage = JSON.parse(localStorage.getItem("products")));
 };
