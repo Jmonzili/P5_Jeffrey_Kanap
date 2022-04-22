@@ -105,7 +105,7 @@ console.log(prixTotal);
 const btnCommander = document.querySelector("#order");
 console.log(btnCommander);
 
-//----------------Ecoute du bouton commander---------------
+//********************ECOUTE DU BOUTON COMMANDER**************************/
 btnCommander.addEventListener("click", (e) => {
 e.preventDefault();
 const contact = {
@@ -195,46 +195,65 @@ function controleEmail() {
         return false;
     }
 };
-
-//-------------Vérification avant envois dans Local Storage---------------
-if(controlePrenom() && controleNom() && controleVille() && controleAdresse() && controleEmail()) {
-    //-------Envois de formulaireValues dans le localStorage--------
-    localStorage.setItem("contact", JSON.stringify(contact));
-    console.log(controlePrenom());
-}else {
-    console.log(controlePrenom());
-    alert("Veuillez remplire correctement le formulaire !" )
-    
-};
-
-//*******************FIN - CONDITION DE VALIDATION DU FORMULAIRE*******************/
-
-//Stocker les values du formulaire et les produits dans un object a envoyer au serveur
+//Stocker l'Id des produits dans un array a envoyer au serveur
 let products = [];
 for (let g = 0; g < selectionLocalStorage.length; g++) {
     let productsId = selectionLocalStorage[g].id_Select;
     products.push(productsId);
 };
 console.log("products");
-console.log(products)
+console.log(products);
 
-//---------------------Envoi vers le serveur-------------------
+//-------------Vérification avant envois dans Local Storage---------------
+if(controlePrenom() && controleNom() && controleVille() && controleAdresse() && controleEmail()) {
+    //-------Envois de formulaireValues dans le localStorage--------
+    localStorage.setItem("contact", JSON.stringify(contact));
+    envoieVersServeur();
+}else {
+    alert("Veuillez remplire correctement le formulaire !" )
+};
+//*******************FIN - CONDITION DE VALIDATION DU FORMULAIRE*******************/
+function envoieVersServeur() {
+    //---------------------Envoi vers le serveur-------------------
 const sendToServer = fetch("http://localhost:3000/api/products/order", {
     method: "POST",
     body: JSON.stringify({contact, products}),
     headers: {
-        "Accept" : "application",
+        "Accept" : "application/json",
         "Content-Type" : "application/json",
     },
 });
-console.log("sendToServer");
-console.log(sendToServer);
-//Pour voir le résultat du serveur dans la console
+
+//----------Afficher le résultat du serveur dans la console------------
+sendToServer.then(async(response) => {
+    //Gestion de l'envoie en cas d'erreur
+    try{
+        const contenu = await response.json();
+        console.log("contenu response");
+        console.log(contenu);
+        if(response.ok) {
+            console.log(`Résultat de reponse.ok : ${response.ok}`);
+            // Récupération de "orderId" 
+            console.log(contenu.orderId);
+            //Envoie de "orderId" dans le local storage
+            localStorage.setItem("numero de commande", contenu.orderId);
+            //Transfert vers la page de confirmation
+            window.location = "confirmation.html";
+        }else {
+            console.log(`Réponse du serveur : ${response.status}`);
+        }
+    
+    }catch(e) {
+        console.log(e);
+    }
 });
+};
+});
+//********************FIN - ECOUTE DU BOUTON COMMANDER*********************/
 
 /*Conservé les values de formulaireValues dans les champs du formulaire */
 //------------Envois de la key du localStorage vers une constante-------------
-const dataLocalStorage = localStorage.getItem("formulaireValues");
+const dataLocalStorage = localStorage.getItem("contact");
 if(dataLocalStorage) {
 //--------------------Conversion en objet Javascript-------------------
 const dataLocalStorageObjet = JSON.parse(dataLocalStorage);
