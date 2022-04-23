@@ -1,15 +1,7 @@
 //Récupération des produits dans le LocalStorage
 let selectionLocalStorage = JSON.parse(localStorage.getItem("products"));
 console.log(selectionLocalStorage);
-/*
-const cartDisplay = async () => {
-    console.log("joky")
-    if (addProduct) {
-        await addProduct;
-        console.log(addProduct); 
-    }
-};
-*/
+
 //----------Tableau récapitulatif des achats-------------
 const cartEmplacement = document.querySelector("#cart__items");
 
@@ -22,7 +14,7 @@ if(selectionLocalStorage === null || selectionLocalStorage == 0) {
     </article>
     `;
 }else {
-cartEmplacement.innerHTML =  selectionLocalStorage
+cartEmplacement.innerHTML = selectionLocalStorage
 .map((eltPanier) => `
 <article class="cart__item" data-id="${eltPanier.id_Select}" data-color="${eltPanier.couleur_Select}">
     <div class="cart__item__img">
@@ -57,7 +49,7 @@ for (let f = 0; f < btnDelete.length; f++){
         event.preventDefault();
     console.log(event);
 //--------Selection de l'id du produit a supprimer---------
-    let id_produit_supprimer = products[f].id_Select;
+    let id_produit_supprimer = selectionLocalStorage[f].id_Select && selectionLocalStorage[f].couleur_Select.value;
     console.log(id_produit_supprimer);
 //----------Selectionner l'élément a supprimer methode filter---------------
 //----methode filter inversé grace a "!=="
@@ -75,6 +67,7 @@ for (let f = 0; f < btnDelete.length; f++){
 
 //---------Calcul du montant total et de quantité total---------
 let calculMontant = [];
+let calculQuantity =[];
 
 //-------------------Récuperation des montant--------------
 if(selectionLocalStorage){
@@ -84,8 +77,15 @@ for (let g = 0; g < selectionLocalStorage.length; g++) {
     calculMontant.push(prixProduitDuPanier);
     console.log(calculMontant);
 }};
-/*
-*/
+
+//-------------------Récuperation des quantité--------------
+if(selectionLocalStorage){
+    for (let h = 0; h < selectionLocalStorage.length; h++) {
+        let quantiteDuPanier = selectionLocalStorage[h].quantite_Select;
+    //----Envoie des quantité dans "calculQuantity"
+        calculQuantity.push(quantiteDuPanier);
+        console.log(quantiteDuPanier);
+    }};
 //--------Addition des montant par la methode reduce----------
 const initialValue = 0; 
 
@@ -93,13 +93,22 @@ const montantTotal = calculMontant.reduce(
     (previousValue, currentValue) => previousValue + currentValue,
     initialValue
   );
-  console.log("montant total");
-  console.log(montantTotal);
+//--------Addition des quantité par la methode reduce----------
+const quantityTotal = calculQuantity.reduce(
+    (previousValue, currentValue) => previousValue + currentValue,
+    initialValue
+  );
 
-//---Affichage du montant total------
+//---Affichage du montant total du panier------
 const prixTotal = document.querySelector("#totalPrice");
 prixTotal.innerHTML = `${montantTotal}`;
 console.log(prixTotal);
+
+//---Affichage de la quantité total du panier------
+const allQuantity = document.querySelector("#totalQuantity");
+allQuantity.innerHTML = `${quantityTotal}`;
+console.log(allQuantity);
+
 //************************ Formulaire de commande ************/
 //-------Sélection du bouton d'envoi du formulaire--------
 const btnCommander = document.querySelector("#order");
@@ -197,8 +206,8 @@ function controleEmail() {
 };
 //Stocker l'Id des produits dans un array a envoyer au serveur
 let products = [];
-for (let g = 0; g < selectionLocalStorage.length; g++) {
-    let productsId = selectionLocalStorage[g].id_Select;
+for (let i = 0; i < selectionLocalStorage.length; i++) {
+    let productsId = selectionLocalStorage[i].id_Select;
     products.push(productsId);
 };
 console.log("products");
