@@ -13,7 +13,7 @@ function deleteKeyLocalStorage(key) {
 deleteKeyLocalStorage("products");
 deleteKeyLocalStorage("numero de commande");
 
-//--Retour à la page d'accueil apres suppression du contenu du local Storage--
+//-----Retour à la page d'accueil une fois le local Storage vide-----
 if(numeroCommande == null || products == null) {
     window.location.href="index.html";
 }
