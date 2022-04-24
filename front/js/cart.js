@@ -4,7 +4,7 @@ console.log(selectionLocalStorage);
 
 //----------Tableau récapitulatif des achats-------------
 const cartEmplacement = document.querySelector("#cart__items");
-
+function cart_Display () { 
 //--------Condition d'affichage panier----------
 if(selectionLocalStorage === null || selectionLocalStorage == 0) {
     
@@ -39,6 +39,8 @@ cartEmplacement.innerHTML = selectionLocalStorage
     </div>
 </article>`
 )};
+}
+cart_Display();
 /*
 //******************Changer la quantité depuis le panier******************
 let itemQuantity = document.querySelector(".itemQuantity");
@@ -56,7 +58,7 @@ for (let f = 0; f < btnDelete.length; f++){
         event.preventDefault();
     console.log(event);
 //--------Selection de l'id du produit a supprimer---------
-    let id_produit_supprimer = selectionLocalStorage[f].id_Select && selectionLocalStorage[f].couleur_Select.value;
+    let id_produit_supprimer = selectionLocalStorage[f].id_Select && selectionLocalStorage[f].couleur_Select;
     console.log(id_produit_supprimer);
 //----------Selectionner l'élément a supprimer methode filter---------------
 //----methode filter inversé grace a "!=="
