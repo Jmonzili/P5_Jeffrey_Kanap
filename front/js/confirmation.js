@@ -12,3 +12,9 @@ function deleteKeyLocalStorage(key) {
 };
 deleteKeyLocalStorage("products");
 deleteKeyLocalStorage("numero de commande");
+
+//
+
+if(numeroCommande == null || products == null) {
+    window.location.href="index.html";
+}
