@@ -4,10 +4,9 @@ console.log(selectionLocalStorage);
 
 //----------Tableau récapitulatif des achats-------------
 const cartEmplacement = document.querySelector("#cart__items");
-function cart_Display () { 
+function cartDisplay () { 
 //--------Condition d'affichage panier----------
 if(selectionLocalStorage === null || selectionLocalStorage == 0) {
-    
     cartEmplacement.innerHTML = `
     <article class="cart__item"> 
     <div> Votre panier est vide </div>
@@ -38,18 +37,31 @@ cartEmplacement.innerHTML = selectionLocalStorage
         </div>
     </div>
 </article>`
-)};
-}
-cart_Display();
-/*
+        )
+        .join("");
+        
+    };
+};
+cartDisplay();
+
+
 //******************Changer la quantité depuis le panier******************
-let itemQuantity = document.querySelector(".itemQuantity");
-itemQuantity.addEventListener("input", console.log);
+const itemQuantity = document.querySelectorAll(".itemQuantity");
+for (let f = 0; f < itemQuantity.length; f++) {
+    itemQuantity[f].addEventListener("input", () => changeQuantity(selectionLocalStorage[f].id_Select));
 console.log("itemQuantity");
 console.log(itemQuantity);
+}
+/*
+function changeQuantity(id_Select) {
+    console.log(id_Select);
+    const itemToChange = selectionLocalStorage.find(selectionLocalStorage[f] => selectionLocalStorage[f].id_Select === id_Select)
+    console.log("itemToChange", itemToChange );
+    
+};
 */
-//--------------Supprimer un article--------------
 
+//**************Supprimer un article***********************
 //----------------Ecouté le click-----------------
 const btnDelete = document.querySelectorAll(".deleteItem");
 
@@ -58,21 +70,21 @@ for (let f = 0; f < btnDelete.length; f++){
         event.preventDefault();
     console.log(event);
 //--------Selection de l'id du produit a supprimer---------
-    let id_produit_supprimer = selectionLocalStorage[f].id_Select && selectionLocalStorage[f].couleur_Select;
+    let id_produit_supprimer = selectionLocalStorage[f].id_Select
     console.log(id_produit_supprimer);
 //----------Selectionner l'élément a supprimer methode filter---------------
 //----methode filter inversé grace a "!=="
-    selectionLocalStorage = selectionLocalStorage.filter(el => el.id_Select !== id_produit_supprimer)
+    selectionLocalStorage = selectionLocalStorage.filter(el => el.id_Select !== id_produit_supprimer);
         console.log(selectionLocalStorage);
 //----transfert de la variable dans le localStorage-----
 //-------transformation en format JSON en envoi dans le localStorage-------
     localStorage.setItem("products", JSON.stringify(selectionLocalStorage));
 //------------Confirmation de suppression------------------
-    alert("Le produit a bien été supprimer du panier");
-    window.location.href = "cart.html";
+   // alert("Le produit a bien été supprimer du panier");
+   // window.location.href = "cart.html";
     });
-  
 }
+//**********************FIN - Suppression ************************/
 
 //---------Calcul du montant total et de quantité total---------
 let calculMontant = [];

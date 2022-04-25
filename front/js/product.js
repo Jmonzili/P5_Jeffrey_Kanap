@@ -64,17 +64,17 @@ const addPanier = () => {
         e.preventDefault();
 
 //----------Variable contenant les choix de l'utilisateur--------------
-        let choixUser = {
-            id_Select: `${productData._id}`,
-            nom_Select: `${productData.name}`,
-            photo_Select: `${productData.imageUrl}`,
-            photo_Description: `${productData.altTxt}`,
-            prix: productData.price * addQuantity.value,
-            description_Select: `${productData.description}`,
-            couleur_Select: `${addColor.value}`,
-            quantite_Select: Number(addQuantity.value)
-        };
-        
+let choixUser = {
+    id_Select: `${productData._id}`,
+    nom_Select: `${productData.name}`,
+    photo_Select: `${productData.imageUrl}`,
+    photo_Description: `${productData.altTxt}`,
+    description_Select: `${productData.description}`,
+    prix: productData.price,
+    couleur_Select: `${addColor.value}`,
+    quantite_Select: Number(addQuantity.value),
+    montant: productData.price * addQuantity.value,
+};
         const infoProductSelect = Object.assign({}, choixUser,);
         console.log("infoProductSelect");
         console.log(infoProductSelect);
