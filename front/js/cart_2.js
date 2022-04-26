@@ -17,6 +17,7 @@ function productDisplay(item) {
     product.appendChild(content)
     panierDisplay(product)
     totalQuantityDisplay(item)
+    montantTotalDisplay(item)
 }
 
 //Ciblé le lieu de l'insertion du html
@@ -85,7 +86,7 @@ function createDescription(item) {
     const color = document.createElement("p")
     color.textContent = item.couleur
     const price = document.createElement("p")
-    price.textContent = item.montant +" €"
+    price.textContent = item.prix +" €"
 
     description.appendChild(nameProduct)
     description.appendChild(color)
@@ -113,10 +114,24 @@ function createImage(item) {
 }
 
 //--------------------TOTAL PANIER--------------------
-//total quantité
+//totalQuantite
 function totalQuantityDisplay(item) {
     const totalQuantity = document.querySelector("#totalQuantity")
-    totalQuantity.textContent = item.quantite
+// Calcul de l'ensemble des quantités du panier
+    const calculQuantity = panier.reduce(
+        (previousValue, item) => previousValue + item.quantite, 0)
+        totalQuantity.textContent = calculQuantity
+}
+
+//montant total
+function montantTotalDisplay(item) {
+    const montantTotal = document.querySelector("#totalPrice")
+//Calcul du montant via la methode reduce
+    const calculMontant = panier.reduce(
+        (previousValue, item) => previousValue + item.prix 
+        * item.quantite, 0)
+    montantTotal.textContent = calculMontant
+
 }
 
 //**************** Fin - Mise en page du panier *************/

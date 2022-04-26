@@ -73,7 +73,7 @@ let choixUser = {
     prix: productData.price,
     couleur: `${addColor.value}`,
     quantite: Number(addQuantity.value),
-    montant: productData.price * addQuantity.value,
+    //montant: productData.price * addQuantity.value,
 };
         const infoProductSelect = Object.assign({}, choixUser,);
         console.log("infoProductSelect");
@@ -121,7 +121,7 @@ let choixUser = {
                     return(
         //Continué de travailler sur le calcul des quantité a l'ajout
                         selectionLocalStorage[i].quantite += addQuantity.value,
-                        selectionLocalStorage[i].montant += choixUser.montant,
+                        //selectionLocalStorage[i].montant += choixUser.montant,
                         localStorage.setItem("products",JSON.stringify(selectionLocalStorage)),
                         (selectionLocalStorage = JSON.parse(localStorage.getItem("products")))
                     );
