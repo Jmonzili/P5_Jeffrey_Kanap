@@ -7,13 +7,14 @@ const panier= JSON.parse(localStorage.getItem("products"));
 //Boucle for pour répété la fonction à chaque article
 panier.forEach((item) => productDisplay(item))
 
-//Insertion de 
+//Insertion de l'article entier
 function productDisplay(item) {
     const product = createArticle(item)
     const divImage = createImage(item)
     product.appendChild(divImage)
-    createContent(item)
+    //createContent(item)
     const content = createContent(item)
+    content
     product.appendChild(content)
     panierDisplay(product)
     totalQuantityDisplay(item)
@@ -61,8 +62,29 @@ function addQuantity(settings, item) {
     itemQuantity.min = "1"
     itemQuantity.max = "100"
     itemQuantity.value = item.quantite;
+    itemQuantity.addEventListener("change", () => changeQuantity(item.id, itemQuantity.value, item))
     quantity.appendChild(itemQuantity)
     settings.appendChild(divQuantity)
+}
+
+//Envois de la mise a jours de quantite dans le local storage
+function changeQuantity(id, newValue, item) {
+//récupération du produit a changer via l'id
+    const itemToChange = panier.find(item => item.id === id)
+//Récupération de la nouvelle quantité
+    itemToChange.quantite = Number(newValue)
+//Ajout des fonctions total pour la prise en compte de new value 
+    totalQuantityDisplay()
+    montantTotalDisplay()
+    saveNewDataToCache(item)
+}
+
+//Fonction de sauvegarde des nouvelles données
+function saveNewDataToCache(item) {
+//Récupération des nouvelles données
+    const dataForSave = JSON.stringify(item)
+//Sauvegarde dans le local storage
+    localStorage.setItem(item.id, dataForSave)
 }
 
 //Insertion du btn supprimer

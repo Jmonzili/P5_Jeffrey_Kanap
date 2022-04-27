@@ -7,7 +7,6 @@ const fetchModeles = async () => {
     .then((res) => res.json())
     .then((promise) => {
         modelesData = promise;
-        console.log(modelesData);
     });
 };
 
@@ -31,4 +30,5 @@ async function modelesDisplay() {
     .join(''); 
 };
 
+//Affichage du contenu via la fonction
 modelesDisplay();
