@@ -83,7 +83,6 @@ function deleteProduct(item) {
     montantTotalDisplay()
     deleteDataFromCache(item)
     deleteArticleFormPage(item)
-    console.log(panier)
 }
 
 //Suppression de l'article du produit dans la page
