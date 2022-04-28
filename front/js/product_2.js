@@ -1,120 +1,148 @@
 // ---------- Recupération de l'Id via l'url -------------
 const product = window.location.search.split("?").join("");
-//Récupération des données sur tout le fichier
-if(product != null) {
-    let prixProduit = 0
-    let imageProduit, altProduit
-}
+console.log(product);
+
 // ------------ Ajout de L'Id à L'url du catalogue -----------
+let productData = [];
 
-fetch(`http://localhost:3000/api/products/${product}`)
+const fetchProduct = async () => {
+    await fetch(`http://localhost:3000/api/products/${product}`)
     .then((res) => res.json())
-    .then((promise) => productData(promise))
+    .then((promise) => {
+        productData = promise;
+        console.log(productData);
+    });
+};
+//**************** DÉBUT - Création du contenu HTML ****************/
+// -------- transfert des données vers leur élément ou ID respectif -------
+const productsDisplay = async () => {
+    await fetchProduct();
 
-//-------Récupération des données du cataloque-----------
-function productData(kanap) {
-    const {colors, _id, name, price, imageUrl, description, altTxt} = kanap
-    prixProduit = price
-    imageProduit = imageUrl
-    altProduit = altTxt
-    addImage(imageUrl, altTxt)
-    addTitlePrice(name, price)
-    addDescription(description)
-    addColors(colors)
-}
-/************** DÉBUT - Mise en page dans le html ************/
-//--------------Ajout de L'image------------
-function addImage(imageUrl, altTxt) {
-//création de l'élément
-    const image = document.createElement("img")
-    image.src = imageUrl
-    image.alt = altTxt
-//insertion dans l'html
-    const itemImg = document.querySelector(".item__img")
-    if(itemImg != null) itemImg.appendChild(image)
-}
+    let itemImg = document.getElementsByClassName("item__img");
+    
+// --------------- Tableau donc pas oublié l'index  ------------
+    itemImg[0].innerHTML = `
+         <img src="${productData.imageUrl}" alt="${productData.altText}"> `
 
-//-------------Ajout du Nom du produit & du prix-----------------
-function addTitlePrice(name, price) {
-    const productName = document.querySelector("#title")
-    if(productName != null) productName.textContent = name
-    const productPrice = document.querySelector("#price")
-    if(productPrice != null) productPrice.textContent = price
-}
+    document.getElementById("title").innerHTML = `
+        ${productData.name} `
 
-//-------------Ajout de la description----------------- 
-function addDescription(description) {
-    const productDescription = document.querySelector("#description")
-    if(productDescription != null) productDescription.textContent = description
-}
+    document.getElementById("price").innerHTML = `
+        ${productData.price}`
 
-//----------------Ajout de L'option colors------------------
-function addColors(colors) {
-//Récupération de l'élément "select"
-    const select = document.querySelector("#colors")
-    if(select != null) {
-//Boucle pour chaque couleur dans "colors"
-        colors.forEach((color) => {
-//créer un élément "option" 
-            const option = document.createElement("option")
-            option.value = color
-            option.textContent = color
-//L'élément "option" est enfant de l'élément "select"
-            select.appendChild(option)
-        })
-    }
-}
-/************** FIN - Mise en page dans le html ************/
+    document.getElementById("description").innerHTML = `
+        ${productData.description}`
 
-/************** DÉBUT - Ajouter au panier ***********/
-//Selectionner le bouton d'ajout
-const buttonAdd = document.querySelector("#addToCart")
-//Ecouté le click du bouton
-buttonAdd.addEventListener("click", addToCart)
+    let colorSelect = document.getElementById("colors");
+    console.log(colorSelect);
 
-function addToCart () {
-//Sélection des values color et quantité
-    const color = document.querySelector("#colors").value
-    const quantity = document.querySelector("#quantity").value
-//Ajout des conditions d'option des données choisi et de la redirection 
-    if(optionInvalid (color, quantity)) return
-    infoProductSelect (color, quantity)
-    redirectAfterAdd()
-}
+//-------- Création d'élément 'option' pour chaque couleur  -----------
+    productData.colors.forEach((color) => {
+        let tagColor = document.createElement("option");
 
-//----------- Local Storage Stockage des choix du client
-function infoProductSelect (color, quantity) {
+        tagColor.innerHTML = `${color}`;
+        tagColor.value = `${color}`;
+
+        colorSelect.appendChild(tagColor);
+    });
+    addPanier(productData);
+};
+
+productsDisplay();
+//**************** FIN - Création du contenu HTML ****************/
+
+
+let addColor = document.querySelector("#colors");
+
+let addQuantity = document.querySelector("#quantity");
+
+//---------------selectionner le bouton d'ajout---------------
+const addPanier = () => {
+    let boutonAjoutPanier = document.querySelector("button");
+//----------------Ecouté le click du bouton--------------------
+    boutonAjoutPanier.addEventListener("click", (e) => {
+        e.preventDefault();
+
 //----------Variable contenant les choix de l'utilisateur--------------
-    const choixUser = {
-        id: product,
-        //nom: `${productData.name}`,
-        image: imageProduit,
-        imageDescription: altProduit,
-        //description: `${productData.description}`,
-        prix: prixProduit,
-        couleur: color,
-        quantite: Number(quantity)
-        //montant: productData.price * addQuantity.value,
+let choixUser = {
+    id: `${productData._id}`,
+    nom: `${productData.name}`,
+    image: `${productData.imageUrl}`,
+    imageDescription: `${productData.altTxt}`,
+    description: `${productData.description}`,
+    prix: productData.price,
+    couleur: `${addColor.value}`,
+    quantite: Number(addQuantity.value),
+    //montant: productData.price * addQuantity.value,
+};
+        const infoProductSelect = Object.assign({}, choixUser,);
+        console.log("infoProductSelect");
+        console.log(infoProductSelect);
+
+//-------Alert si aucune couleur et/ou quantité sont selectionner-------
+        if(addColor.value == null || addColor.value === "" 
+        || addQuantity.value == null || addQuantity.value == 0) {
+            alert("Veuillez selectionnez un couleur et ajouter une quantité");
+            return;
+        }; 
+
+//------------------Local Storage---------------------
+//-----------------Stockage des valeurs---------------
+//----Création de variable "selectionLocalStorage"-----
+        let selectionLocalStorage = JSON.parse(localStorage.getItem("products"));
+//Conversion des objets JSON du local storage en JavaScript via "JSON.parse"
+
+//fenetre pour continué les achats ou pour ce rendre au panier
+        const fenetreConfirmation = () => {
+            if(window.confirm(`L'article ${productData.name}, ${addColor.value} a été ajouter au panier.
+            Consultez le panier OK ou continuez vos achats ANNULER`)){
+                window.location.href = "cart.html";
+            }else{
+                window.location.href = "index.html";
+            }
+        }
+//----------Fonction d'ajout dans le localStorage
+    const sendLocalStorage = () => {
+        selectionLocalStorage.push(infoProductSelect);
+//-------transformation en format JSON en envoi dans le localStorage-------
+        localStorage.setItem("products", JSON.stringify(selectionLocalStorage));
     };
-//transformation en format JSON & envoi dans le localStorage
-    localStorage.setItem(product, JSON.stringify(choixUser))
-}
 
-//------------------ Option mal remplit -----------------
-function optionInvalid (color, quantity) {
-//Condition en cas d'élément vide
-    if(color == null || color === "" 
-    || quantity == null || quantity == 0) {
-//alert en cas d'élément vide
-        alert("Veuillez selectionnez un couleur et ajouter une quantité");
-        return true;
-    };
-}
-
-//----------------- Rediriger apres l'ajout -----------------
-function redirectAfterAdd() {
-//Rediriger vers la page panier
-    window.location.href = "cart.html";
-}
-
-/*************** FIN - Btn ajouter au panier ************/
+//-----------Condition d'ajout dans le local storage-------------
+        if(selectionLocalStorage) {
+            //sendLocalStorage();
+            fenetreConfirmation();
+//------Augmenter la quantité si le produit ajouter a le -------
+//------------------meme id et la meme couleur------------------
+            for (i = 0; i < selectionLocalStorage.length; i++) {
+                if (selectionLocalStorage[i].id == productData._id &&
+                    selectionLocalStorage[i].couleur == addColor.value
+                ) {
+                    return(
+        //Continué de travailler sur le calcul des quantité a l'ajout
+                        selectionLocalStorage[i].quantite += addQuantity.value,
+                        //selectionLocalStorage[i].montant += choixUser.montant,
+                        localStorage.setItem("products",JSON.stringify(selectionLocalStorage)),
+                        (selectionLocalStorage = JSON.parse(localStorage.getItem("products")))
+                    );
+                }
+            }
+//-------------------Si couleur ou ID different------------------
+            for (i = 0; i < selectionLocalStorage.length; i++) {
+                if (
+                    (selectionLocalStorage[i].id ==  productData._id &&
+                    selectionLocalStorage[i].couleur != addColor.value) || 
+                    selectionLocalStorage[i].id != productData._id
+                ) { return(
+                    sendLocalStorage()
+                    );
+                }
+            }
+        }else {
+            selectionLocalStorage = [];
+            sendLocalStorage();
+            fenetreConfirmation(); 
+        }
+    });
+    return (selectionLocalStorage = JSON.parse(localStorage.getItem("products")));
+};
