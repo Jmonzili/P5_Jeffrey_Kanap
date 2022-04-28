@@ -1,7 +1,7 @@
 //*******Récupération des produits dans le LocalStorage********
 //Création de la constante "panier"
-const panier= JSON.parse(localStorage.getItem("products"));
-//const nombreItems = panier.length;
+const panier= JSON.parse(localStorage.getItem(localStorage.key(i)));
+const nombreItems = panier.length;
 
 //**************** DÉBUT - Mise en page du panier *************/
 //Boucle for pour répété la fonction à chaque article
@@ -153,7 +153,5 @@ function montantTotalDisplay(item) {
         (previousValue, item) => previousValue + item.prix 
         * item.quantite, 0)
     montantTotal.textContent = calculMontant
-
 }
-
 //**************** Fin - Mise en page du panier *************/
