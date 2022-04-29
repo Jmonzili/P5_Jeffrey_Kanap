@@ -3,6 +3,10 @@
 const panier = []
 retrieveItem()
 
+//Séléction et écoute du bouton commander
+const btnCommander = document.querySelector("#order")
+btnCommander.addEventListener("click", (e) => submitForm(e))
+
 //Fonction de récupération
 function retrieveItem() {
     const nombreItems = localStorage.length;
@@ -197,3 +201,146 @@ function montantTotalDisplay(item) {
     montantTotal.textContent = calculMontant
 }
 //**************** Fin - Mise en page du panier *************/
+//**************** Début - Du Formulaire ********************/
+function submitForm(e) {
+    e.preventDefault()
+    if (panier.length === 0) {
+        alert("Veuillez ajouté un article a commander")
+        return
+    }
+
+//----------------- Controle de validité -------------------
+//Bloqué l'envoi du formulaire si il est invalide
+    if(formInvalid() || controlePrenom() || controleNom() || controleVille() || controleAdresse() || controleEmail()) {
+        return
+    }
+    /*
+    if(controleAdresse())return
+    if(controleEmail()) return
+    */
+
+    const body = envoieVersServeur()
+    fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            "Content-Type" : "application/json"
+        }
+    })
+    .then((res) => res.json())
+    .then((data) => console.log(data))
+}
+
+//Contrôle de la validité du "prenom"
+function controlePrenom() {
+    const prenom = document.querySelector("#firstName")
+    const regExPrenom = /^[A-Za-z]{3,20}$/
+    if (regExPrenom.test(prenom.value) === false) {
+        document.querySelector("#firstNameErrorMsg").innerHTML = `
+        Chiffre et symbole ne sont pas autorisé.
+        @ \n Seulement entre 3 et 20 caractères`
+        alert('Veuillez remplire correctement le formulaire "Prenom continent une erreur"!')
+        return true
+    }
+    return false
+}
+
+//Contrôle de la validité du "nom"
+function controleNom() {
+    const nom = document.querySelector("#lastName")
+    const regExNom = /^[A-Za-z]{3,20}$/
+    if (regExNom.test(nom.value) === false) {
+        document.querySelector("#lastNameErrorMsg").innerHTML = `
+        Chiffre et symbole ne sont pas autorisé.
+        @ \n Seulement entre 3 et 20 caractères`
+        alert('Veuillez remplire correctement le formulaire "Nom continent une erreur" !')
+        return true
+    }
+    return false
+}
+
+//Contrôle de la validité du champ "ville"
+function controleVille() {
+    const ville = document.querySelector("#city")
+    const regExVille = /^[A-Za-z]{3,20}$/
+    if (regExVille.test(ville.value) === false) {
+        document.querySelector("#cityErrorMsg").innerHTML = `
+        Chiffre et symbole ne sont pas autorisé.
+        @ \n Seulement entre 3 et 20 caractères`
+        alert('Veuillez remplire correctement le formulaire "Ville continent une erreur" !')
+        return true
+    }
+    return false
+}
+
+//Contrôle de la validité du champ "Adresse" 
+function controleAdresse() {
+    const adresse = document.querySelector("#address")
+    const regExAdresse = /^[A-Za-z0-9\s]{5,50}$/
+    if (regExAdresse.test(adresse.value) === false) {
+        document.querySelector("#addressErrorMsg").innerHTML = `
+        Ne doit contenir uniquement des lettres sans ponctuation et des chiffres`;
+        alert('Veuillez remplire correctement le formulaire "Adresse continent une erreur" !')
+        return true;
+    } 
+        return false;
+};
+
+//Contrôle de la validité du champ "Email"
+function controleEmail() {
+    const email = document.querySelector("#email")
+    const regExEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+    if (regExEmail.test(email.value) === false) {
+        document.querySelector("#emailErrorMsg").innerHTML = `
+        L'email n'est pas valide `;
+        alert("Veuillez entrer une adresse valide")
+        return true;
+    }
+    return false;
+};
+
+//Formulaire invalide
+function formInvalid() {
+    const form = document.querySelector(".cart__order__form")
+    const inputs = form.querySelectorAll("input")
+//Si un input du formulaire est vide Affiché msg d'alerte
+    inputs.forEach((input) => {
+        if(input.value ==="") {
+            alert("veuillez remplir tous les champs")
+            return true
+        }
+        return false
+        
+        
+    })
+
+}
+
+//
+function envoieVersServeur() {
+    const formulaire = document.querySelector(".cart__order__form")
+    const body = {  
+        contact: {
+            firstName : document.querySelector("#firstName").value,
+            lastName : document.querySelector("#lastName").value,
+            address : document.querySelector("#address").value,
+            city : document.querySelector("#city").value,
+            email : document.querySelector("#email").value
+        },
+        products: getIdsFromCache()
+    }
+    return body 
+}
+
+//fonction de récupération des id à envoyer dans la commmande
+function getIdsFromCache() {
+    const numberOfProduct = localStorage.length
+    const ids = []
+    for (let i = 0; i < numberOfProduct; i++) {
+        const key = localStorage.key(i)
+//".split()" pour séparé la key en de parti & select la 1er via "[0]"
+        const id = key.split("-")[0]
+        ids.push(id)
+    }
+    return ids
+}
