@@ -80,7 +80,7 @@ function addToCart () {
 //Ajout des conditions d'option des données choisi et de la redirection 
     if(optionInvalid (color, quantity)) return
     infoProductSelect (color, quantity)
-    redirectAfterAdd()
+    redirectAfterAdd(color)
 }
 
 //----------- Local Storage Stockage des choix du client
@@ -109,15 +109,20 @@ function optionInvalid (color, quantity) {
     if(color == null || color === "" 
     || quantity == null || quantity == 0) {
 //alert en cas d'élément vide
-        alert("Veuillez selectionnez un couleur et ajouter une quantité");
+        alert("Veuillez selectionnez une couleur et ajouter une quantité");
         return true;
     };
 }
 
 //----------------- Rediriger apres l'ajout -----------------
-function redirectAfterAdd() {
+function redirectAfterAdd(color) {
 //Rediriger vers la page panier
-    window.location.href = "cart.html";
+    if(window.confirm(`L'article ${nameProduit} ${color} a été ajouter au panier.
+    Consultez le panier OK ou continuez vos achats ANNULER`)){
+        window.location.href = "cart.html";
+    }else{
+        window.location.href = "index.html";
+    }
 }
 
 /*************** FIN - Btn ajouter au panier ************/

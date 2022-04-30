@@ -66,6 +66,7 @@ const addPanier = () => {
 //----------Variable contenant les choix de l'utilisateur--------------
 let choixUser = {
     id: `${productData._id}`,
+    key: `${productData._id}-${addColor.value}`,
     nom: `${productData.name}`,
     image: `${productData.imageUrl}`,
     imageDescription: `${productData.altTxt}`,
@@ -73,16 +74,17 @@ let choixUser = {
     prix: productData.price,
     couleur: `${addColor.value}`,
     quantite: Number(addQuantity.value),
-    //montant: productData.price * addQuantity.value,
+    montant: productData.price * addQuantity.value,
 };
         const infoProductSelect = Object.assign({}, choixUser,);
         console.log("infoProductSelect");
-        console.log(infoProductSelect);
+        console.log(infoProductSelect.key);
+        
 
 //-------Alert si aucune couleur et/ou quantité sont selectionner-------
         if(addColor.value == null || addColor.value === "" 
         || addQuantity.value == null || addQuantity.value == 0) {
-            alert("Veuillez selectionnez un couleur et ajouter une quantité");
+            alert("Veuillez selectionnez une couleur et ajouter une quantité");
             return;
         }; 
 
@@ -110,17 +112,17 @@ let choixUser = {
 
 //-----------Condition d'ajout dans le local storage-------------
         if(selectionLocalStorage) {
-            //sendLocalStorage();
+            sendLocalStorage();
             fenetreConfirmation();
-//------Augmenter la quantité si le produit ajouter a le -------
-//------------------meme id et la meme couleur------------------
+            
+//Augmenter la quantité si le produit ajouter a la meme key
             for (i = 0; i < selectionLocalStorage.length; i++) {
-                if (selectionLocalStorage[i].id == productData._id &&
-                    selectionLocalStorage[i].couleur == addColor.value
+                if (selectionLocalStorage[i].id == infoProductSelect.id &&
+                    selectionLocalStorage[i].color == infoProductSelect.color
                 ) {
                     return(
         //Continué de travailler sur le calcul des quantité a l'ajout
-                        selectionLocalStorage[i].quantite += addQuantity.value,
+                        //selectionLocalStorage[i].quantite += infoProductSelect.quantite,
                         //selectionLocalStorage[i].montant += choixUser.montant,
                         localStorage.setItem("products",JSON.stringify(selectionLocalStorage)),
                         (selectionLocalStorage = JSON.parse(localStorage.getItem("products")))
@@ -130,14 +132,13 @@ let choixUser = {
 //-------------------Si couleur ou ID different------------------
             for (i = 0; i < selectionLocalStorage.length; i++) {
                 if (
-                    (selectionLocalStorage[i].id ==  productData._id &&
-                    selectionLocalStorage[i].couleur != addColor.value) || 
-                    selectionLocalStorage[i].id != productData._id
+                    (selectionLocalStorage[i].key !==  infoProductSelect.key)
                 ) { return(
                     sendLocalStorage()
                     );
                 }
             }
+            
         }else {
             selectionLocalStorage = [];
             sendLocalStorage();

@@ -14,6 +14,6 @@ deleteKeyLocalStorage("products");
 deleteKeyLocalStorage("numero de commande");
 
 //-----Retour à la page d'accueil une fois le local Storage vide-----
-if(numeroCommande == null || products == null) {
+if(numeroCommande == null || localStorage.key("contact")) {
     window.location.href="index.html";
 }

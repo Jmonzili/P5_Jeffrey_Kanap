@@ -15,6 +15,7 @@ function retrieveItem() {
 //transfert de JSON a JavaScript
         const itemObjet = JSON.parse(item)
         panier.push(itemObjet)
+        
     }
 }
 //**************** DÉBUT - Mise en page du panier *************/
@@ -117,7 +118,7 @@ function addQuantity(settings, item) {
     itemQuantity.min = "1"
     itemQuantity.max = "100"
     itemQuantity.value = item.quantite;
-    itemQuantity.addEventListener("change", () => updateQuantity(item.id, itemQuantity.value, item))
+    itemQuantity.addEventListener("input", () => updateQuantity(item.id, itemQuantity.value, item))
     quantity.appendChild(itemQuantity)
     settings.appendChild(divQuantity)
 }
@@ -209,16 +210,25 @@ function submitForm(e) {
         return
     }
 
+    const contact = {
+        firstName : document.querySelector("#firstName").value,
+        lastName : document.querySelector("#lastName").value,
+        address : document.querySelector("#address").value,
+        city : document.querySelector("#city").value,
+        email : document.querySelector("#email").value
+    }
+
 //----------------- Controle de validité -------------------
 //Bloqué l'envoi du formulaire si il est invalide
     if(formInvalid() || controlePrenom() || controleNom() || controleVille() || controleAdresse() || controleEmail()) {
         return
+    }else {
+//Envois de formulaireValues dans le localStorage
+        localStorage.setItem("contact", JSON.stringify(contact));
+        envoieVersServeur();
     }
-    /*
-    if(controleAdresse())return
-    if(controleEmail()) return
-    */
 
+//
     const body = envoieVersServeur()
     fetch("http://localhost:3000/api/products/order", {
         method: "POST",
@@ -228,7 +238,14 @@ function submitForm(e) {
         }
     })
     .then((res) => res.json())
-    .then((data) => console.log(data))
+    .then((data) => {
+        const orderId = data.orderId
+//Envois du numéro de commande dans le localStorage
+        localStorage.setItem("orderId", JSON.stringify(orderId));
+        return console.log(data)
+    })
+    .catch
+    
 }
 
 //Contrôle de la validité du "prenom"
@@ -316,10 +333,12 @@ function formInvalid() {
 
 }
 
-//
+//fonction d'envois des données vers le serveur
 function envoieVersServeur() {
     const formulaire = document.querySelector(".cart__order__form")
-    const body = {  
+//Stockage de l'objet contact et des produits dans un constante
+    const body = { 
+//stockage du formulaire dans l'objet "contact" 
         contact: {
             firstName : document.querySelector("#firstName").value,
             lastName : document.querySelector("#lastName").value,
@@ -327,6 +346,7 @@ function envoieVersServeur() {
             city : document.querySelector("#city").value,
             email : document.querySelector("#email").value
         },
+//stockage des produits récupérer dans l'obejt "products" 
         products: getIdsFromCache()
     }
     return body 

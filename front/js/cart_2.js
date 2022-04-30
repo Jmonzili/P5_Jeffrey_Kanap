@@ -1,6 +1,17 @@
 //Récupération des produits dans le LocalStorage
 let selectionLocalStorage = JSON.parse(localStorage.getItem("products"));
 console.log(selectionLocalStorage);
+/*
+couleur: "Blue"
+description: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+id: "107fb5b75607497b96722bda5b504926"
+image: "http://localhost:3000/images/kanap01.jpeg"
+imageDescription: "Photo d'un canapé bleu, deux places"
+nom: "Kanap Sinopé"
+prix: 1849
+quantite: 1
+*/ 
+
 
 //----------Tableau récapitulatif des achats-------------
 const cartEmplacement = document.querySelector("#cart__items");
@@ -15,20 +26,20 @@ if(selectionLocalStorage === null || selectionLocalStorage == 0) {
 }else {
 cartEmplacement.innerHTML = selectionLocalStorage
 .map((eltPanier) => `
-<article class="cart__item" data-id="${eltPanier.id_Select}" data-color="${eltPanier.couleur_Select}">
+<article class="cart__item" data-id="${eltPanier.id}" data-color="${eltPanier.couleur}">
     <div class="cart__item__img">
-        <img src="${eltPanier.photo_Select}" alt="${eltPanier.photo_Descrition}">
+        <img src="${eltPanier.image}" alt="${eltPanier.descrition}">
     </div>
     <div class="cart__item__content">
         <div class="cart__item__content__description">
-            <h2>${eltPanier.nom_Select}</h2>
-            <p>${eltPanier.couleur_Select}</p>
+            <h2>${eltPanier.nom}</h2>
+            <p>${eltPanier.couleur}</p>
             <p>${eltPanier.prix}€</p>
         </div>
         <div class="cart__item__content__settings">
             <div class="cart__item__content__settings__quantity">
                 <p>Qté :  </p>
-                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${eltPanier.quantite_Select}">
+                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${eltPanier.quantite}">
             </div>
             
             <div class="cart__item__content__settings__delete">
@@ -48,14 +59,14 @@ cartDisplay();
 //******************Changer la quantité depuis le panier******************
 const itemQuantity = document.querySelectorAll(".itemQuantity");
 for (let f = 0; f < itemQuantity.length; f++) {
-    itemQuantity[f].addEventListener("input", () => changeQuantity(selectionLocalStorage[f].id_Select));
+    itemQuantity[f].addEventListener("input", () => changeQuantity(selectionLocalStorage[f].key));
 console.log("itemQuantity");
 console.log(itemQuantity);
 }
 /*
-function changeQuantity(id_Select) {
-    console.log(id_Select);
-    const itemToChange = selectionLocalStorage.find(selectionLocalStorage[f] => selectionLocalStorage[f].id_Select === id_Select)
+function changeQuantity(key) {
+    console.log(key);
+    const itemToChange = selectionLocalStorage.find(selectionLocalStorage[f] => selectionLocalStorage[f].key === key)
     console.log("itemToChange", itemToChange );
     
 };
@@ -69,17 +80,17 @@ for (let f = 0; f < btnDelete.length; f++){
     btnDelete[f].addEventListener("click", (event) =>{
         event.preventDefault();
     console.log(event);
-//--------Selection de l'id du produit a supprimer---------
-    let id_produit_supprimer = selectionLocalStorage[f].id_Select
-    console.log(id_produit_supprimer);
-//----------Selectionner l'élément a supprimer methode filter---------------
+//Selection de l'id du produit a supprimer via key
+    let produitSupprimer = selectionLocalStorage[f].key
+    console.log(produitSupprimer);
+//Selectionner l'élément a supprimer methode filter
 //----methode filter inversé grace a "!=="
-    selectionLocalStorage = selectionLocalStorage.filter(el => el.id_Select !== id_produit_supprimer);
+    selectionLocalStorage = selectionLocalStorage.filter(el => el.key !== produitSupprimer);
         console.log(selectionLocalStorage);
-//----transfert de la variable dans le localStorage-----
-//-------transformation en format JSON en envoi dans le localStorage-------
+//transfert de la variable dans le localStorage
+//transformation en format JSON en envoi dans le localStorage
     localStorage.setItem("products", JSON.stringify(selectionLocalStorage));
-//------------Confirmation de suppression------------------
+//Confirmation de suppression
     alert("Le produit a bien été supprimer du panier");
     window.location.href = "cart.html";
     });
@@ -93,16 +104,16 @@ let calculQuantity =[];
 //-------------------Récuperation des montant--------------
 if(selectionLocalStorage){
 for (let g = 0; g < selectionLocalStorage.length; g++) {
-    let prixProduitDuPanier = selectionLocalStorage[g].prix;
+    let montantProduit = selectionLocalStorage[g].montant;
 //----Envoie des prix dans "calculMontant"
-    calculMontant.push(prixProduitDuPanier);
+    calculMontant.push(montantProduit);
     console.log(calculMontant);
 }};
 
 //-------------------Récuperation des quantité--------------
 if(selectionLocalStorage){
     for (let h = 0; h < selectionLocalStorage.length; h++) {
-        let quantiteDuPanier = selectionLocalStorage[h].quantite_Select;
+        let quantiteDuPanier = selectionLocalStorage[h].quantite;
     //----Envoie des quantité dans "calculQuantity"
         calculQuantity.push(quantiteDuPanier);
         console.log(quantiteDuPanier);
@@ -114,6 +125,7 @@ const montantTotal = calculMontant.reduce(
     (previousValue, currentValue) => previousValue + currentValue,
     initialValue
   );
+ 
 //--------Addition des quantité par la methode reduce----------
 const quantityTotal = calculQuantity.reduce(
     (previousValue, currentValue) => previousValue + currentValue,
@@ -228,7 +240,7 @@ function controleEmail() {
 //Stocker l'Id des produits dans un array a envoyer au serveur
 let products = [];
 for (let i = 0; i < selectionLocalStorage.length; i++) {
-    let productsId = selectionLocalStorage[i].id_Select;
+    let productsId = selectionLocalStorage[i].id;
     products.push(productsId);
 };
 console.log("products");
