@@ -50,27 +50,29 @@ cartEmplacement.innerHTML = selectionLocalStorage
 </article>`
         )
         .join("");
-        
     };
 };
 cartDisplay();
 
 
 //******************Changer la quantité depuis le panier******************
+
+/*
 const itemQuantity = document.querySelectorAll(".itemQuantity");
 for (let f = 0; f < itemQuantity.length; f++) {
-    itemQuantity[f].addEventListener("input", () => changeQuantity(selectionLocalStorage[f].key));
+    itemQuantity[f].addEventListener("input", () => changeQuantity(selectionLocalStorage, key));
 console.log("itemQuantity");
 console.log(itemQuantity);
 }
-/*
-function changeQuantity(key) {
+
+function changeQuantity(selectionLocalStorage, key) {
     console.log(key);
-    const itemToChange = selectionLocalStorage.find(selectionLocalStorage[f] => selectionLocalStorage[f].key === key)
+    const itemToChange = selectionLocalStorage.find(selectionLocalStorage[f].key => )
     console.log("itemToChange", itemToChange );
     
 };
 */
+
 
 //**************Supprimer un article***********************
 //----------------Ecouté le click-----------------
