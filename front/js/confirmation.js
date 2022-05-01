@@ -12,9 +12,8 @@ function deleteKeyLocalStorage(key) {
 };
 deleteKeyLocalStorage("products");
 deleteKeyLocalStorage("numero de commande");
-/*
+
 //-----Retour à la page d'accueil une fois le local Storage vide-----
-if(numeroCommande == null || localStorage.key("contact")) {
+if(numeroCommande == null || localStorage.key("products") == null) {
     window.location.href="index.html";
 }
-*/

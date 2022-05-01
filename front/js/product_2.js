@@ -121,7 +121,7 @@ let choixUser = {
                     selectionLocalStorage[i].color == infoProductSelect.color
                 ) {
                     return(
-        //Continué de travailler sur le calcul des quantité a l'ajout
+//Continué de travailler sur le calcul des quantité a l'ajout
                         //selectionLocalStorage[i].quantite += infoProductSelect.quantite,
                         //selectionLocalStorage[i].montant += choixUser.montant,
                         localStorage.setItem("products",JSON.stringify(selectionLocalStorage)),
@@ -140,6 +140,7 @@ let choixUser = {
             }
             
         }else {
+//Sinon créer le tableau envoyer le produit et afficher la fenetre de confirmation
             selectionLocalStorage = [];
             sendLocalStorage();
             fenetreConfirmation(); 
