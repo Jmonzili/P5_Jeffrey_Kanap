@@ -10,6 +10,7 @@ ${numeroCommande}`;
 function deleteKeyLocalStorage(key) {
     localStorage.removeItem(key);
 };
+//Suppression de la key "products" et de orderId dans le local storage 
 deleteKeyLocalStorage("products");
 deleteKeyLocalStorage("numero de commande");
 
