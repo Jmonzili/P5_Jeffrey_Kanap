@@ -12,7 +12,7 @@ function deleteKeyLocalStorage(key) {
 };
 //Suppression de la key "products" et de orderId dans le local storage 
 deleteKeyLocalStorage("products");
-deleteKeyLocalStorage("numero de commande");
+deleteKeyLocalStorage("numero de commande")
 
 //-----Retour à la page d'accueil une fois le local Storage vide-----
 if(numeroCommande == null || localStorage.key("products") == null) {

@@ -96,8 +96,8 @@ function infoProductSelect (color, quantity) {
         //description: `${productData.description}`,
         prix: prixProduit,
         couleur: color,
-        quantite: Number(quantity)
-        //montant: productData.price * addQuantity.value,
+        quantite: Number(quantity),
+        montant: productData.price * Number(quantity),
     };
 //transformation en format JSON & envoi dans le localStorage
     localStorage.setItem(key, JSON.stringify(choixUser))
