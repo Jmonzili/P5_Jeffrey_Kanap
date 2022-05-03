@@ -18,22 +18,22 @@ const fetchProduct = async () => {
 const productsDisplay = async () => {
     await fetchProduct();
 
-    let itemImg = document.getElementsByClassName("item__img");
+    let itemImg = document.querySelectorAll(".item__img");
     
 // --------------- Tableau donc pas oublié l'index  ------------
     itemImg[0].innerHTML = `
          <img src="${productData.imageUrl}" alt="${productData.altText}"> `
 
-    document.getElementById("title").innerHTML = `
+    document.querySelector("#title").innerHTML = `
         ${productData.name} `
 
-    document.getElementById("price").innerHTML = `
+    document.querySelector("#price").innerHTML = `
         ${productData.price}`
 
-    document.getElementById("description").innerHTML = `
+    document.querySelector("#description").innerHTML = `
         ${productData.description}`
 
-    let colorSelect = document.getElementById("colors");
+    let colorSelect = document.querySelector("#colors");
     console.log(colorSelect);
 
 //-------- Création d'élément 'option' pour chaque couleur  -----------

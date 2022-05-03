@@ -14,7 +14,7 @@ const fetchModeles = async () => {
 async function modelesDisplay() {
     await fetchModeles();
 
-    document.getElementById("items").innerHTML = modelesData
+    document.querySelector("#items").innerHTML = modelesData
     .map(
         (modele) => `
     <a href="./product.html?${modele._id}">

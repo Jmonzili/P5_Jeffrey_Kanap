@@ -1,19 +1,25 @@
 //Récupération des produits dans le LocalStorage
 let selectionLocalStorage = JSON.parse(localStorage.getItem("products"));
 console.log(selectionLocalStorage);
+/*
+couleur: "Blue"
+description: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+id: "107fb5b75607497b96722bda5b504926"
+image: "http://localhost:3000/images/kanap01.jpeg"
+imageDescription: "Photo d'un canapé bleu, deux places"
+nom: "Kanap Sinopé"
+prix: 1849
+quantite: 1
+*/ 
+
 
 //----------Tableau récapitulatif des achats-------------
 const cartEmplacement = document.querySelector("#cart__items");
-function cartDisplay () { 
+const cartDisplay = async (eltPanier) => {
 //--------Condition d'affichage panier----------
-if(selectionLocalStorage === null || selectionLocalStorage == 0) {
-    cartEmplacement.innerHTML = `
-    <article class="cart__item"> 
-    <div> Votre panier est vide </div>
-    </article>
-    `;
-}else {
-cartEmplacement.innerHTML = selectionLocalStorage
+    if(selectionLocalStorage) {
+        await selectionLocalStorage
+        cartEmplacement.innerHTML = selectionLocalStorage
 .map((eltPanier) => `
 <article class="cart__item" data-id="${eltPanier.id}" data-color="${eltPanier.couleur}">
     <div class="cart__item__img">
@@ -28,7 +34,7 @@ cartEmplacement.innerHTML = selectionLocalStorage
         <div class="cart__item__content__settings">
             <div class="cart__item__content__settings__quantity">
                 <p>Qté :  </p>
-                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${eltPanier.quantite}">
+                <input type="number" data-key="${eltPanier.key}" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${eltPanier.quantite}">
             </div>
             
             <div class="cart__item__content__settings__delete">
@@ -36,16 +42,45 @@ cartEmplacement.innerHTML = selectionLocalStorage
             </div>
         </div>
     </div>
-</article>`
+</article>`,
         )
         .join("");
+
+        moveQuantity(eltPanier);
+
+        return
+    
+    }else {
+        cartEmplacement.innerHTML = `
+        <article class="cart__item"> 
+        <div> Votre panier est vide </div>
+        </article>
+        `;
     };
 };
 cartDisplay();
 
-
+//gros teste change quantité
 //******************Changer la quantité depuis le panier******************
+const moveQuantity = async (cartDisplay, eltPanier, newValue) => {
+    await cartDisplay
+    console.log("Joky ++");
+    let itemQuantity = document.querySelectorAll(".itemQuantity")
+    console.log(itemQuantity)
+    itemQuantity.forEach((input) => {
+        
+        input.addEventListener("change", () => {
+            console.log(input)
+            const itemToChange = 
+            selectionLocalStorage.find(eltPanier => eltPanier.key == input.dataset.key)
+            console.log(itemToChange)
+            
+            //itemToChange.quantite = Number(newValue)
+            //console.log(newValue)
 
+        })
+    })
+}
 /*
 const itemQuantity = document.querySelectorAll(".itemQuantity");
 for (let f = 0; f < itemQuantity.length; f++) {
