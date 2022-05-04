@@ -93,11 +93,10 @@ function infoProductSelect (color, quantity) {
         nom: nameProduit,
         image: imageProduit,
         imageDescription: altProduit,
-        //description: `${productData.description}`,
         prix: prixProduit,
         couleur: color,
         quantite: Number(quantity),
-        montant: productData.price * Number(quantity),
+        montant: prixProduit * Number(quantity),
     };
 //transformation en format JSON & envoi dans le localStorage
     localStorage.setItem(key, JSON.stringify(choixUser))
@@ -124,5 +123,4 @@ function redirectAfterAdd(color) {
         window.location.href = "index.html";
     }
 }
-
 /*************** FIN - Btn ajouter au panier ************/
