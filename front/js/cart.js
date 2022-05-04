@@ -34,8 +34,8 @@ function productDisplay(item) {
     const content = createContent(item)
     article.appendChild(content)
     panierDisplay(article)
-    totalQuantityDisplay(item)
-   // montantTotalDisplay(item)
+    totalQuantityDisplay()
+    montantTotalDisplay()
 }
 
 //Création de l'article entier
@@ -80,7 +80,6 @@ function createDescription(item) {
     color.textContent = item.couleur
     const price = document.createElement("p")
     price.textContent = item.prix +" €"
-
     description.appendChild(nameProduct)
     description.appendChild(color)
     description.appendChild(price)
@@ -114,7 +113,28 @@ function addQuantity(settings, item) {
     settings.appendChild(divQuantity)
     quantity.appendChild(itemQuantity)
 // Eventlistener
-    //itemQuantity.addEventListener("input", () => updateQuantity(item.id, itemQuantity.value, item))
+    itemQuantity.addEventListener("input", () => updateQuantity(item.key, itemQuantity.value, item))
+}
+
+//Envois de la mise a jours de quantite dans le local storage
+function updateQuantity(key, newValue, item) {
+//récupération du produit a changer via la key=(id-color)
+    const itemToChange = panier.find(item => item.key === key)
+//Récupération de la nouvelle quantité
+    itemToChange.quantite = Number(newValue)
+    console.log(panier)
+//Ajout des fonctions total pour la prise en compte de new value 
+    totalQuantityDisplay()
+    montantTotalDisplay()
+    saveNewDataToCache(item)
+}
+
+//Fonction de sauvegarde des nouvelles données
+function saveNewDataToCache(item) {
+//Récupération des nouvelles données
+    const dataForSave = JSON.stringify(item)
+//Sauvegarde dans le local storage
+    localStorage.setItem(item.key, dataForSave)
 }
 
 //Création du btn supprimer
@@ -131,10 +151,20 @@ function addDelete(settings, item) {
 
 //--------------------TOTAL PANIER--------------------
 //totalQuantite
-function totalQuantityDisplay(item) {
+function totalQuantityDisplay() {
     const totalQuantity = document.querySelector("#totalQuantity")
 // Calcul de l'ensemble des quantités du panier
     const calculQuantity = panier.reduce(
         (previousValue, item) => previousValue + item.quantite, 0)
         totalQuantity.textContent = calculQuantity
+}
+
+//montant total
+function montantTotalDisplay() {
+    const montantTotal = document.querySelector("#totalPrice")
+//Calcul du montant total via la methode reduce
+    const calculMontant = panier.reduce(
+        (previousValue, item) => previousValue + item.prix 
+        * item.quantite, 0)
+    montantTotal.textContent = calculMontant
 }

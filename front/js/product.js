@@ -95,6 +95,7 @@ function infoProductSelect (color, quantity) {
         imageDescription: altProduit,
         prix: prixProduit,
         couleur: color,
+        key: `${product}-${color}`,
         quantite: Number(quantity),
         montant: prixProduit * Number(quantity),
     };
