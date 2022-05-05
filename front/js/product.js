@@ -103,7 +103,7 @@ function infoProductSelect (color, quantity) {
     localStorage.setItem(key, JSON.stringify(choixUser))
 }
 
-//------------------ Option mal remplit -----------------
+//------------------ Option non valide -----------------
 function optionInvalid (color, quantity) {
 //Condition en cas d'élément vide
     if(color == null || color === "" 

@@ -73,13 +73,14 @@ function createContent(item) {
 function createDescription(item) {
     const description = document.createElement("div")
     description.classList.add("cart__item__content__description")
-
+//Création des éléments
     const nameProduct = document.createElement("h2")
     nameProduct.textContent = item.nom
     const color = document.createElement("p")
     color.textContent = item.couleur
     const price = document.createElement("p")
     price.textContent = item.prix +" €"
+//Ajout des éléments dans la div déscription
     description.appendChild(nameProduct)
     description.appendChild(color)
     description.appendChild(price)
@@ -126,15 +127,6 @@ function updateQuantity(key, newValue, item) {
 //Ajout des fonctions total pour la prise en compte de new value 
     totalQuantityDisplay()
     montantTotalDisplay()
-    saveNewDataToCache(item)
-}
-
-//Fonction de sauvegarde des nouvelles données
-function saveNewDataToCache(item) {
-//Récupération des nouvelles données
-    const dataForSave = JSON.stringify(item)
-//Sauvegarde dans le local storage
-    localStorage.setItem(item.key, dataForSave)
 }
 
 //Création du btn supprimer
@@ -146,7 +138,45 @@ function addDelete(settings, item) {
     buttonDelete.textContent = "Supprimer"
     settings.appendChild(divDelete)
     divDelete.appendChild(buttonDelete)
-    //buttonDelete.addEventListener("click", () => deleteProduct(item))
+    buttonDelete.addEventListener("click", () => deleteProduct(item))
+}
+
+//--------- Supprimer un produit du panier -----------
+function deleteProduct(item) {
+//Trouver l'index du produit a supprimer par l'id et la couleur
+    const productToDelete = panier.find(
+        (product) => product.key === item.key
+    )
+//Suppression par la methode splice
+    panier.splice(productToDelete, 1)
+    console.log(panier)
+    totalQuantityDisplay()
+    montantTotalDisplay()
+    deleteDataFromCache(item)
+    deleteArticleFormPage(item)
+}
+
+//Suppression de l'article du produit dans la page
+function deleteArticleFormPage(item) {
+    const articleToDelete = document.querySelector(
+        `article[data-id="${item.id}"][data-color="${item.couleur}"]`
+    )
+    articleToDelete.remove()
+}
+
+//--------------- Supprimer le produit du local storage ------------
+function deleteDataFromCache(item) {
+    const key = `${item.id}-${item.couleur}`
+    localStorage.removeItem(key)
+    console.log("produit supprimer", key)
+}
+
+//Fonction de sauvegarde des nouvelles données
+function saveNewDataToCache(item) {
+//Récupération des nouvelles données
+    const dataForSave = JSON.stringify(item)
+//Sauvegarde dans le local storage
+    localStorage.setItem(item.key, dataForSave)
 }
 
 //--------------------TOTAL PANIER--------------------
