@@ -336,9 +336,9 @@ function formInvalid() {
 //fonction d'envois des données vers le serveur
 function envoieVersServeur() {
     const formulaire = document.querySelector(".cart__order__form")
-//Stockage de l'objet contact et des produits dans un constante
+//Stockage de l'object contact et des produits dans un constante
     const body = { 
-//stockage du formulaire dans l'objet "contact" 
+//stockage du formulaire dans l'object "contact" 
         contact: {
             firstName : document.querySelector("#firstName").value,
             lastName : document.querySelector("#lastName").value,
@@ -346,7 +346,7 @@ function envoieVersServeur() {
             city : document.querySelector("#city").value,
             email : document.querySelector("#email").value
         },
-//stockage des produits récupérer dans l'obejt "products" 
+//stockage des produits récupérer dans l'object "products" 
         products: getIdsFromCache()
     }
     return body 
