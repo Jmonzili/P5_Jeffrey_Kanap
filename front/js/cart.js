@@ -23,7 +23,7 @@ function panierDisplay(article) {
     document.querySelector("#cart__items").appendChild(article)
 }
 
-
+//Mise en place du recap produit
 function productDisplay(item) {
 //Insertion de l'article entier
     const article = createArticle(item)
