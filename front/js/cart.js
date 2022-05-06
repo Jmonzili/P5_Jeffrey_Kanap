@@ -159,8 +159,8 @@ function deleteProduct(item) {
     panier.splice(productToDelete, 1)
     totalQuantityDisplay()
     montantTotalDisplay()
-    deleteDataFromCache(item)
     deleteArticleFormPage(item)
+    deleteDataFromCache(item)
 }
 
 //Suppression de l'article du produit dans la page
@@ -175,6 +175,8 @@ function deleteArticleFormPage(item) {
 function deleteDataFromCache(item) {
     const key = `${item.id}-${item.couleur}`
     localStorage.removeItem(key)
+//Actualisation de la page apres suppression
+    window.location.href = "cart.html"
 }
 
 //--------------------TOTAL PANIER--------------------
