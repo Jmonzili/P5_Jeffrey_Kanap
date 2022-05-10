@@ -1,15 +1,15 @@
-//Récupération du numero de commande dans le local storage
-const orderId = localStorage.getItem("numéro de commande");
-console.log(`numéro de commande: ${orderId}`);
+//Récupération du numero de commande dans le local storage                  
+const panier = localStorage
+const orderId = panier.getItem("numéro de commande")
+const numeroCommande = document.querySelector("#orderId")
 
-//Afficher le numero de commande dans le "main"
-document.querySelector("#orderId").innerHTML =`
-${orderId}`;
+//Afficher le numero de commande 
+numeroCommande.textContent = orderId
 
-//Supprimer le contenu du local storage sauf le formulaire
-localStorage.clear();
+//Supprimer le contenu du local storage
+panier.clear()
 
-//Retour à la page d'accueil une fois le local Storage vide
+//Retour à la page d'accueil si local Storage vide
 if(orderId == null ) {
     window.location.href="index.html";
 }

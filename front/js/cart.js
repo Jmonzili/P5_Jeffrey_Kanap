@@ -324,7 +324,6 @@ function envoieVersServeur() {
 //stockage des produits récupérer dans l'object "products" 
         products: getIdsFromCache()
     }
-    console.log(body)
     return body 
 }
 
@@ -334,7 +333,6 @@ function getIdsFromCache() {
     const ids = []
     for (let i = 0; i < numberOfProducts; i++) {
         const key = localStorage.key(i)
-        console.log(key)
 //".split()" pour séparé la key en 2 parties & select la 1er via "[0]"
         const id = key.split("-")[0]
         ids.push(id)
