@@ -112,6 +112,12 @@ function optionInvalid (color, quantity) {
         alert("Veuillez selectionnez une couleur et ajouter une quantité");
         return true;
     };
+//Condition en cas de quantité non valide
+    if(quantity < 1 || quantity > 100) {
+//Alerte en cas de quantité non valide
+        alert("La quantité dois etre entre 1 et 100");
+        return true
+    }
 }
 
 //----------------- Rediriger apres l'ajout -----------------
