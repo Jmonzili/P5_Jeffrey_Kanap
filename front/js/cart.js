@@ -231,9 +231,9 @@ if(controlePrenom() || controleNom() || controleVille() || controleAdresse() || 
     .then((data) => {
         const orderId = data.orderId
 //Envois du numéro de commande dans le localStorage
-        localStorage.setItem("numéro de commande", JSON.stringify(orderId));
+        //localStorage.setItem("numéro de commande", JSON.stringify(orderId));
 //Redirection vers la page confirmation
-        window.location.href = "confirmation.html"
+        window.location.href = `confirmation.html?${orderId}`
         return console.log(data)
     })
     .catch((err) => console.log(err))
