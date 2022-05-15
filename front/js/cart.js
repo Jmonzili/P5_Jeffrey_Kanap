@@ -215,7 +215,7 @@ function submitForm(e) {
     }
 
 //Envoie des fonctions de controle d'erreur du formulaire
-if(controlePrenom() || controleNom() || controleVille() || controleAdresse() || controleEmail()) {
+if(controlePrenom() || controleNom() || controleAdresse() || controleVille() || controleEmail()) {
     return
 }
 
@@ -248,8 +248,10 @@ function controlePrenom() {
         document.querySelector("#firstNameErrorMsg").innerHTML = `
         Chiffre et symbole ne sont pas autorisé.
         @ \n Seulement entre 3 et 20 caractères`
-        alert('Veuillez remplire correctement le formulaire !')
+        alert('"Champ prénom" Veuillez remplire correctement le formulaire !')
         return true
+    }else {
+        document.querySelector("#firstNameErrorMsg").innerHTML = ""
     }
     return false
 }
@@ -262,8 +264,10 @@ function controleNom() {
         document.querySelector("#lastNameErrorMsg").innerHTML = `
         Chiffre et symbole ne sont pas autorisé.
         @ \n Seulement entre 3 et 20 caractères`
-        alert('Veuillez remplire correctement le formulaire !')
+        alert('"Champ nom" Veuillez remplire correctement le formulaire !')
         return true
+    }else {
+        document.querySelector("#lastNameErrorMsg").innerHTML = ""
     }
     return false
 }
@@ -276,8 +280,10 @@ function controleVille() {
         document.querySelector("#cityErrorMsg").innerHTML = `
         Chiffre et symbole ne sont pas autorisé.
         @ \n Seulement entre 3 et 20 caractères`
-        alert('Veuillez remplire correctement le formulaire !')
+        alert('"Champ ville" Veuillez remplire correctement le formulaire !')
         return true
+    }else {
+        document.querySelector("#cityErrorMsg").innerHTML = ""
     }
     return false
 }
@@ -289,9 +295,11 @@ function controleAdresse() {
     if (regExAdresse.test(adresse.value) === false || adresse.value === "") {
         document.querySelector("#addressErrorMsg").innerHTML = `
         Ne doit contenir uniquement des lettres sans ponctuation et des chiffres`;
-        alert('Veuillez remplire correctement le formulaire !')
+        alert('"Champ Adresse" Veuillez remplire correctement le formulaire !')
         return true;
-    } 
+    }else {
+        document.querySelector("#addressErrorMsg").innerHTML = ""
+    }
         return false;
 };
 
@@ -302,8 +310,10 @@ function controleEmail() {
     if (regExEmail.test(email.value) === false || email.value === "") {
         document.querySelector("#emailErrorMsg").innerHTML = `
         L'email n'est pas valide `;
-        alert('Veuillez remplire correctement le formulaire !')
+        alert('"Champ email" Veuillez remplire correctement le formulaire !')
         return true;
+    }else {
+        document.querySelector("#emailErrorMsg").innerHTML = ""
     }
     return false;
 };

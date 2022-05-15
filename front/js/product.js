@@ -93,11 +93,11 @@ function infoProductSelect (color, quantity) {
         nom: nameProduit,
         image: imageProduit,
         imageDescription: altProduit,
-        prix: prixProduit,
+        //prix: prixProduit,
         couleur: color,
         key: `${product}-${color}`,
         quantite: Number(quantity),
-        montant: prixProduit * Number(quantity),
+        //montant: prixProduit * Number(quantity),
     };
 //transformation en format JSON & envoi dans le localStorage
     localStorage.setItem(key, JSON.stringify(choixUser))

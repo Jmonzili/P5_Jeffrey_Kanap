@@ -12,7 +12,7 @@ panier.clear()
 
 /*
 //Retour à la page d'accueil si local Storage vide
-if(numeroCommande.textContent = orderId) {
-    window.location.search = "";
+if(panier.length = 0) {
+    window.location.href = "index.html";
 }
 */
