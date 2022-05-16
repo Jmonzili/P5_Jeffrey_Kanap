@@ -79,7 +79,11 @@ function createDescription(item) {
     const color = document.createElement("p")
     color.textContent = item.couleur
     const price = document.createElement("p")
-    price.textContent = item.prix +" €"
+    fetch('http://localhost:3000/api/products/'+item.id)
+        .then((res) => res.json())
+        .then((promise) => {
+            price.innerHTML = promise.price +" €"
+        })
 //Ajout des éléments dans la div déscription
     description.appendChild(nameProduct)
     description.appendChild(color)
@@ -192,11 +196,18 @@ function totalQuantityDisplay() {
 //montant total
 function montantTotalDisplay() {
     const montantTotal = document.querySelector("#totalPrice")
-//Calcul du montant total via la methode reduce
-    const calculMontant = panier.reduce(
-        (previousValue, item) => previousValue + item.prix 
-        * item.quantite, 0)
-    montantTotal.textContent = calculMontant
+    const kanapQuantity = document.querySelectorAll(".itemQuantity")
+
+    let calculMontant = 0
+    
+    for (let i = 0; i < panier.length; i++)
+    fetch(`http://localhost:3000/api/products/${panier[i].id}`)
+    .then((res) => res.json())
+    .catch((err) => console.log(err))
+    .then((promise) => {
+        calculMontant += kanapQuantity[i].value * promise.price
+        montantTotal.textContent = calculMontant
+    })
 }
 //**************** Fin - Mise en page du panier *************/
 
